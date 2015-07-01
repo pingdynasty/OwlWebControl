@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <title>OpenWareLaboratory</title>
   <script src="jquery.min.js"></script>
-  <script src="WebMIDIAPI.js"></script>
+  <!-- <script src="WebMIDIAPI.js"></script> -->
   <script src="midiclient.js"></script>
   <script src="OpenWareMidiControl.js"></script>
   <script src="owlcmd.js"></script>
@@ -24,9 +24,8 @@
   <select id="midiOutputs" onchange="selectMidiOutput(this.selectedIndex)">
     <option>...</option>
   </select>
-  Connect: <input type="button" onclick="connect(); return false;"/>
-  Check: <input id="midi" type="button"/>
-  Check: <input id="midi2" type="button"/>
+  Monitor: <input id="monitor" type="button"/>
+  Connect: <input id="connect" type="button"/>
   </p>
 
   <p>Patches

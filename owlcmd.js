@@ -1,3 +1,4 @@
+var monitorTask = undefined;
 
 function noteOn(note, velocity) {
   console.log("received noteOn "+note+"/"+velocity);
@@ -124,16 +125,6 @@ function sendLoadRequest(){
     sendRequest(OpenWareMidiSysexCommand.SYSEX_PARAMETER_NAME_COMMAND);
 }
 
-var statusTask = undefined;
-function connect(){
-    if(statusTask == undefined){
-	statusTask = window.setInterval(sendStatusRequest, 1000);
-    }else{
-	clearInterval(statusTask);
-	statusTask = undefined;
-    }
-}
-
 function onMidiInitialised(){
     $("#midiInputs").val(0).change();
     $("#midiOutputs").val(0).change();
@@ -142,9 +133,6 @@ function onMidiInitialised(){
     // selectMidiInput(0);
     // selectMidiOutput(0);
     log("showtime");
-    sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION);
-    sendLoadRequest();
-    sendStatusRequest();
 }
 
 function updatePermission(name, status) {
@@ -172,18 +160,30 @@ window.addEventListener('load', function() {
     // 	});
     // }
 
-    $("#midi").on('click', function() {
-    	if(navigator && navigator.requestMIDIAccess)
-            navigator.requestMIDIAccess({sysex:false});
-    });
+    // $("#midi").on('click', function() {
+    // 	if(navigator && navigator.requestMIDIAccess)
+    //         navigator.requestMIDIAccess({sysex:false});
+    // });
 
-    $("#midi2").on('click', function() {
+    $("#connect").on('click', function() {
     	if(navigator && navigator.requestMIDIAccess)
             navigator.requestMIDIAccess({sysex:true});
     	initialiseMidi(onMidiInitialised);
+	sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION);
+	sendLoadRequest();
+	sendStatusRequest();
     });
 
-    initialiseMidi(onMidiInitialised);
+    $("#monitor").on('click', function() {
+	if(monitorTask == undefined){
+	    monitorTask = window.setInterval(sendStatusRequest, 1000);
+	}else{
+	    clearInterval(monitorTask);
+	    monitorTask = undefined;
+	}
+    });
+
+    // initialiseMidi(onMidiInitialised);
     
     $('#clear').on('click', function() {
 	$('#log').empty();
