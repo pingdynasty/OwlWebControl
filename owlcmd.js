@@ -135,8 +135,8 @@ function connect(){
 }
 
 function onMidiInitialised(){
-    // $("#midiInputs").val(2).change();
-    // $("#midiOutputs").val(2).change();
+    $("#midiInputs").val(0).change();
+    $("#midiOutputs").val(0).change();
     // selectMidiInput(3);
     // selectMidiOutput(4);
     // selectMidiInput(0);
@@ -155,22 +155,22 @@ function updatePermission(name, status) {
 window.addEventListener('load', function() {
     // Check for Midi/Midi SysEx permissions
 
-    if(navigator && navigator.permissions){
-    	navigator.permissions.query({name:'midi', sysex:false}).then(function(p) {
-            updatePermission('midi', p.status);
-            p.onchange = function() {
-    		updatePermission('midi', this.status);
-            };
-    	});
+    // if(navigator && navigator.permissions){
+    // 	navigator.permissions.query({name:'midi', sysex:false}).then(function(p) {
+    //         updatePermission('midi', p.status);
+    //         p.onchange = function() {
+    // 		updatePermission('midi', this.status);
+    //         };
+    // 	});
 
-    	navigator.permissions.query({name:'midi', sysex:true}).then(function(p) {
-            updatePermission('midi-sysex', p.status);
-            p.onchange = function() {
-    		updatePermission('midi-sysex', this.status);
-    		initialiseMidi(onMidiInitialised);
-            };
-    	});
-    }
+    // 	navigator.permissions.query({name:'midi', sysex:true}).then(function(p) {
+    //         updatePermission('midi-sysex', p.status);
+    //         p.onchange = function() {
+    // 		updatePermission('midi-sysex', this.status);
+    // 		initialiseMidi(onMidiInitialised);
+    //         };
+    // 	});
+    // }
 
     $("#midi").on('click', function() {
     	if(navigator && navigator.requestMIDIAccess)

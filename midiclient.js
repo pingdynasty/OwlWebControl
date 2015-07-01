@@ -18,6 +18,7 @@ function logMidiData(data){
 function onMIDIInit(midi, options) {
     log("MIDI sysex options: "+options);
     log("MIDI sysex: "+midi.sysexEnabled);
+    log("MIDI onstatechange: "+midi.onstatechange);
     midiAccess = midi;
 
     var i = 0;
