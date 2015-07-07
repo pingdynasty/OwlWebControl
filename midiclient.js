@@ -12,7 +12,7 @@ function logMidiEvent(ev){
 function logMidiData(data){
   var arr = [];
   for(var i=0; i<data.length; i++) arr.push((data[i]<16 ? '0' : '') + data[i].toString(16));
-  // console.log('MIDI:', arr.join(' '));
+  console.log('MIDI:', arr.join(' '));
 }
 
 function onMIDIInit(midi, options) {

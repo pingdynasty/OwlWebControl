@@ -65,15 +65,14 @@ function systemExclusive(data) {
 }
 
 function registerMidiInput(index, name){
-  var select = document.getElementById("midiInputs");
-  select.options[index] = new Option(name, index);
+    $('#midiInputs').append($("<option>").attr('value',index).text(name));
 }
 
 function registerMidiOutput(index, name){
-  var select = document.getElementById("midiOutputs");
-  select.options[index] = new Option(name, index);
+    $('#midiOutputs').append($("<option>").attr('value',index).text(name));
 }
 
+var ledColour = 'white';
 function controlChange(cc, value){
     console.log("received CC "+cc+": "+value);
     switch(cc){
@@ -86,8 +85,20 @@ function controlChange(cc, value){
     case OpenWareMidiControl.PATCH_PARAMETER_C:
 	$("#p3").val(value);
 	break;
-    case OpenWareMidiControl.PATCH_PARAMETER_Da:
+    case OpenWareMidiControl.PATCH_PARAMETER_D:
 	$("#p4").val(value);
+	break;
+    case OpenWareMidiControl.PATCH_PARAMETER_E:
+	$("#p5").val(value);
+	break;
+    case OpenWareMidiControl.LED:
+	if(value < 42)
+	    ledColour = 'white';
+	else if(value > 83)
+	    ledColour = 'red';
+	else
+	    ledColour = 'green';
+	$("#patchled").css({backgroundColor: ledColour});
 	break;
     }
 }
@@ -121,6 +132,7 @@ function selectPatch(pid){
 }
 
 function sendLoadRequest(){
+    $('#patchnames').empty();
     sendRequest(OpenWareMidiSysexCommand.SYSEX_PRESET_NAME_COMMAND);
     sendRequest(OpenWareMidiSysexCommand.SYSEX_PARAMETER_NAME_COMMAND);
 }
@@ -128,16 +140,89 @@ function sendLoadRequest(){
 function onMidiInitialised(){
     $("#midiInputs").val(0).change();
     $("#midiOutputs").val(0).change();
-    // selectMidiInput(3);
-    // selectMidiOutput(4);
-    // selectMidiInput(0);
     // selectMidiOutput(0);
+    // selectMidiInput(0);
     log("showtime");
+}
+
+function openMidiInput(index){
+    if(index != 0xff)
+	selectMidiInput(index);
+}
+
+function openMidiOutput(index){
+    if(index != 0xff){
+	selectMidiOutput(index);
+	sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION);
+	sendLoadRequest();
+	sendStatusRequest();
+    }
 }
 
 function updatePermission(name, status) {
     console.log('update permission for ' + name + ' with ' + status);
     log('update permission for ' + name + ' with ' + status);
+}
+
+function sendProgramRun(){
+    console.log("sending sysex run command");
+    var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_DEVICE, 
+	       OpenWareMidiSysexCommand.SYSEX_FIRMWARE_RUN, 0xf7 ];
+    logMidiData(msg);
+    if(midiOutput)
+      midiOutput.send(msg, 0);
+}
+
+function sendProgramStore(index){
+    console.log("sending sysex store "+index);
+    var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_DEVICE, 
+	       OpenWareMidiSysexCommand.SYSEX_FIRMWARE_STORE, index, 0xf7 ];
+    logMidiData(msg);
+    if(midiOutput)
+      midiOutput.send(msg, 0);
+}
+
+function sendProgram(evt){
+    var files = evt.target.files; // FileList object
+    // Loop through the FileList
+    for (var i = 0, f; f = files[i]; i++) {
+        var reader = new FileReader();
+        // Closure to capture the file information.
+        reader.onload = (function(file) {
+            return function(e) {
+		log("sending sysex file "+file.name);
+		var data = new Uint8Array(e.target.result);
+		var from = 0;
+		for(var i=0; i<data.length; ++i){
+		    if(data[i] == 0xf0){
+			from = i;
+		    }else if(data[i] == 0xf7){
+			console.log("sending "+(i-from)+" bytes sysex");
+			msg = data.subarray(from, i+1);
+			logMidiData(msg);
+			if(midiOutput)
+			    midiOutput.send(msg, 0);
+		    }
+		}
+            };
+        })(f);
+	console.log("reading file "+f.name);
+	reader.readAsArrayBuffer(f);
+    }
+}
+
+function toggleLed(){
+    if(ledColour == 'green')
+	ledColour = 'red';
+    else
+	ledColour = 'green';
+    if(ledColour == 'green')
+	sendCc(OpenWareMidiControl.LED, 63);
+    else if(ledColour == 'red')
+	sendCc(OpenWareMidiControl.LED, 127);
+    else
+	sendCc(OpenWareMidiControl.LED, 0);
+    sendRequest(OpenWareMidiControl.LED);
 }
 
 window.addEventListener('load', function() {
@@ -165,13 +250,14 @@ window.addEventListener('load', function() {
     //         navigator.requestMIDIAccess({sysex:false});
     // });
 
+    $("#patchupload").on('change', function(evt) {
+	sendProgram(evt);
+    });
+
     $("#connect").on('click', function() {
     	if(navigator && navigator.requestMIDIAccess)
             navigator.requestMIDIAccess({sysex:true});
     	initialiseMidi(onMidiInitialised);
-	sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION);
-	sendLoadRequest();
-	sendStatusRequest();
     });
 
     $("#monitor").on('click', function() {
