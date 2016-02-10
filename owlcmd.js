@@ -181,6 +181,22 @@ function sendProgramStore(index){
       midiOutput.send(msg, 0);
 }
 
+function sendProgramData(data){
+    var from = 0;
+    console.log("sending program data "+data.length+" bytes");	
+    for(var i=0; i<data.length; ++i){
+	if(data[i] == 0xf0){
+	    from = i;
+	}else if(data[i] == 0xf7){
+	    console.log("sending "+(i-from)+" bytes sysex");
+	    msg = data.subarray(from, i+1);
+	    logMidiData(msg);
+	    if(midiOutput)
+		midiOutput.send(msg, 0);
+	}
+    }
+}
+
 function sendProgram(evt){
     var files = evt.target.files; // FileList object
     // Loop through the FileList
@@ -191,23 +207,29 @@ function sendProgram(evt){
             return function(e) {
 		log("sending sysex file "+file.name);
 		var data = new Uint8Array(e.target.result);
-		var from = 0;
-		for(var i=0; i<data.length; ++i){
-		    if(data[i] == 0xf0){
-			from = i;
-		    }else if(data[i] == 0xf7){
-			console.log("sending "+(i-from)+" bytes sysex");
-			msg = data.subarray(from, i+1);
-			logMidiData(msg);
-			if(midiOutput)
-			    midiOutput.send(msg, 0);
-		    }
-		}
+		sendProgramData(data);
             };
         })(f);
 	console.log("reading file "+f.name);
 	reader.readAsArrayBuffer(f);
     }
+}
+
+function sendProgramFromUrl(url){
+    console.log("sending patch from url "+url);
+    var oReq = new XMLHttpRequest();
+    oReq.responseType = "arraybuffer";
+    oReq.onload = function (oEvent) {
+	console.log("here");	
+	var arrayBuffer = oReq.response; // Note: not oReq.responseText
+	if(arrayBuffer) {
+	    console.log("there");	
+	    var data = new Uint8Array(arrayBuffer);
+	    sendProgramData(data);
+	}
+    }
+    oReq.open("GET", url, true);
+    oReq.send();
 }
 
 function toggleLed(){

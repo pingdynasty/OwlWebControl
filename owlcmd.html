@@ -69,6 +69,16 @@
   </div>
 
   <div>
+    <h3>Send Patch</h3>
+    <!-- <form onsubmit="sendProgramFromUrl(this.patchurl.value); return false;"> -->
+    <!--   url <input id="patchurl"/> -->
+    <!--   <input type="submit">Load patch</input> -->
+    <!-- </form> -->
+      url <input id="patchurl"/>
+    <button onclick="sendProgramFromUrl(document.getElementById('patchurl').value)">Load patch</input>
+  </div>
+
+  <div>
     <h3>Query</h3>
     status <input type="button" onclick="sendStatusRequest(); return false;"/>
     load <input type="button" onclick="sendLoadRequest(); return false;"/>
