@@ -15,13 +15,13 @@
   <h2><span id="firmwareversion">OpenWareLaboratory</span></h2>
 
   <p>MIDI In
-  <select id="midiInputs" onchange="openMidiInput(this.options[this.selectedIndex].value)">
+  <select id="midiInputs" onchange="openMidiInput(this.value)">
     <option value="0xff"><i>none</i></option>
   </select>
   </p>
 
   <p>MIDI Out
-  <select id="midiOutputs" onchange="openMidiOutput(this.options[this.selectedIndex].value)">
+  <select id="midiOutputs" onchange="openMidiOutput(this.value)">
     <option value="0xff"><i>none</i></option>
   </select>
   Monitor: <input id="monitor" type="button"/>
@@ -62,6 +62,10 @@
     Store 1 <input type="button" onclick="sendProgramStore(1); return false;"/>
     Store 2 <input type="button" onclick="sendProgramStore(2); return false;"/>
     Store 3 <input type="button" onclick="sendProgramStore(3); return false;"/>
+    <form onsubmit="sendFirmwareFlash(this)">
+      Checksum: <input type="text" name="crc32"/>
+      <input type="submit">Flash firmware</input>
+    </form>
   </div>
 
   <div>

@@ -146,13 +146,12 @@ function onMidiInitialised(){
 }
 
 function openMidiInput(index){
-    if(index != 0xff)
-	selectMidiInput(index);
+    selectMidiInput(index);
 }
 
 function openMidiOutput(index){
+    selectMidiOutput(index);
     if(index != 0xff){
-	selectMidiOutput(index);
 	sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION);
 	sendLoadRequest();
 	sendStatusRequest();
