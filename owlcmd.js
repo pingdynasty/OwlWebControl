@@ -1,4 +1,11 @@
-var monitorTask = undefined;
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
 
 function noteOn(note, velocity) {
   console.log("received noteOn "+note+"/"+velocity);
@@ -40,39 +47,41 @@ function systemExclusive(data) {
 	    // log("preset "+idx+": "+name);
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PARAMETER_NAME_COMMAND:
+            var parameter_map = [' ', 'a', 'b', 'c', 'd', 'e'];
             var name = getStringFromSysex(data, 5, 1);
 	    var pid = data[4]+1;
 	    console.log("parameter "+pid+" :"+name);
-	    $("#p"+pid).text(name);
+	    $("#p"+pid).text(name); // update the prototype slider names
+	    break;
+	case OpenWareMidiSysexCommand.SYSEX_DEVICE_ID:
+            var msg = getStringFromSysex(data, 4, 1);
+	    console.log("device id "+msg);
+	    $("#deviceid").text(msg);	    
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_STATS:
             var msg = getStringFromSysex(data, 4, 1);
+	    console.log("program stats "+msg);
 	    $("#patchstatus").text(msg);	    
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION:
             var msg = getStringFromSysex(data, 4, 1);
-	    $("#firmwareversion").text(msg);	    
+	    console.log("firmware "+msg);
+	    $("#ourstatus").text("Connected to "+msg);	    
+	    break;
+	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE:
+            var msg = getStringFromSysex(data, 4, 1);
+	    console.log("program message "+msg);
+	    $("#patchmessage").text("["+msg+"]");
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_DEVICE_STATS:
-	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE:
-	    // deliberate fall-through
 	default:
             var msg = getStringFromSysex(data, 4, 1);
-	    log(msg);
+	    log("Unhandled message: "+msg);
 	    break;
 	}
     }
 }
 
-function registerMidiInput(index, name){
-    $('#midiInputs').append($("<option>").attr('value',index).text(name));
-}
-
-function registerMidiOutput(index, name){
-    $('#midiOutputs').append($("<option>").attr('value',index).text(name));
-}
-
-var ledColour = 'white';
 function controlChange(cc, value){
     console.log("received CC "+cc+": "+value);
     switch(cc){
@@ -85,20 +94,8 @@ function controlChange(cc, value){
     case OpenWareMidiControl.PATCH_PARAMETER_C:
 	$("#p3").val(value);
 	break;
-    case OpenWareMidiControl.PATCH_PARAMETER_D:
+    case OpenWareMidiControl.PATCH_PARAMETER_Da:
 	$("#p4").val(value);
-	break;
-    case OpenWareMidiControl.PATCH_PARAMETER_E:
-	$("#p5").val(value);
-	break;
-    case OpenWareMidiControl.LED:
-	if(value < 42)
-	    ledColour = 'white';
-	else if(value > 83)
-	    ledColour = 'red';
-	else
-	    ledColour = 'green';
-	$("#patchled").css({backgroundColor: ledColour});
 	break;
     }
 }
@@ -112,50 +109,82 @@ function programChange(pc){
 
 
 function sendRequest(type){
-    sendCc(OpenWareMidiControl.REQUEST_SETTINGS, type);
+    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.REQUEST_SETTINGS, type);
 }
 
 function sendStatusRequest(){
+    sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE);
+    sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_STATS);
     sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_STATS);
+}
+
+var doStatusRequestLoop = true;
+function statusRequestLoop() {
+    sendStatusRequest();
+    if(doStatusRequestLoop)
+	setTimeout(statusRequestLoop, 2000);
 }
 
 function setParameter(pid, value){
     console.log("parameter "+pid+": "+value);
-    sendCc(OpenWareMidiControl.PATCH_PARAMETER_A+pid, value);
+    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_A+pid, value);
 }
 
-function selectPatch(pid){
+function selectOwlPatch(pid){
+    var parameter_map = [' ', 'a', 'b', 'c', 'd', 'e'];
+
     console.log("select patch "+pid);
-    for(i=0; i<5; ++i)
-	$("#p"+i).text("");
+
+    for(i=0; i<5; ++i) {
+        $("#p"+i).text(""); // clear the prototype slider names
+    }
+    
     sendPc(pid);
 }
 
 function sendLoadRequest(){
-    $('#patchnames').empty();
     sendRequest(OpenWareMidiSysexCommand.SYSEX_PRESET_NAME_COMMAND);
     sendRequest(OpenWareMidiSysexCommand.SYSEX_PARAMETER_NAME_COMMAND);
 }
 
 function onMidiInitialised(){
-    $("#midiInputs").val(0).change();
-    $("#midiOutputs").val(0).change();
-    // selectMidiOutput(0);
-    // selectMidiInput(0);
-    log("showtime");
-}
 
-function openMidiInput(index){
-    selectMidiInput(index);
-}
+    // auto set the input and output to an OWL
+    
+    var outConnected = false,
+        inConnected = false;
 
-function openMidiOutput(index){
-    selectMidiOutput(index);
-    if(index != 0xff){
-	sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION);
-	sendLoadRequest();
-	sendStatusRequest();
+    for (var o = 0; o < HoxtonOwl.midiClient.midiOutputs.length; o++) {
+        if (HoxtonOwl.midiClient.midiOutputs[o].name.match('^OWL-MIDI')) {
+            HoxtonOwl.midiClient.selectMidiOutput(o);
+            outConnected = true;
+            break;
+        }        
     }
+
+    for (var i = 0; i < HoxtonOwl.midiClient.midiInputs.length; i++) {
+        if (HoxtonOwl.midiClient.midiInputs[i].name.match('^OWL-MIDI')) {
+            HoxtonOwl.midiClient.selectMidiInput(i);
+            inConnected = true;
+            break;
+        }        
+    }
+
+    if (inConnected && outConnected) {
+        console.log('connected to an OWL');
+        $('#ourstatus').text('Connected to an OWL')
+        $('#load-owl-button').show();
+    } else {
+        console.log('failed to connect to an OWL');
+        $('#ourstatus').text('Failed to connect to an OWL')
+        $('#load-owl-button').hide();
+    }
+
+    // sendLoadRequest(); // load patches
+    sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION);
+    // sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_ID);
+    // sendRequest(127);
+    statusRequestLoop();
 }
 
 function updatePermission(name, status) {
@@ -163,90 +192,15 @@ function updatePermission(name, status) {
     log('update permission for ' + name + ' with ' + status);
 }
 
-function sendProgramRun(){
-    console.log("sending sysex run command");
-    var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_DEVICE, 
-	       OpenWareMidiSysexCommand.SYSEX_FIRMWARE_RUN, 0xf7 ];
-    logMidiData(msg);
-    if(midiOutput)
-      midiOutput.send(msg, 0);
-}
-
-function sendProgramStore(index){
-    console.log("sending sysex store "+index);
-    var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_DEVICE, 
-	       OpenWareMidiSysexCommand.SYSEX_FIRMWARE_STORE, index, 0xf7 ];
-    logMidiData(msg);
-    if(midiOutput)
-      midiOutput.send(msg, 0);
-}
-
-function sendProgramData(data){
-    var from = 0;
-    console.log("sending program data "+data.length+" bytes");	
-    for(var i=0; i<data.length; ++i){
-	if(data[i] == 0xf0){
-	    from = i;
-	}else if(data[i] == 0xf7){
-	    console.log("sending "+(i-from)+" bytes sysex");
-	    msg = data.subarray(from, i+1);
-	    logMidiData(msg);
-	    if(midiOutput)
-		midiOutput.send(msg, 0);
-	}
+function connectToOwl() {
+    if(navigator && navigator.requestMIDIAccess)
+    {
+        navigator.requestMIDIAccess({sysex:true});
     }
+    HoxtonOwl.midiClient.initialiseMidi(onMidiInitialised);
 }
 
-function sendProgram(evt){
-    var files = evt.target.files; // FileList object
-    // Loop through the FileList
-    for (var i = 0, f; f = files[i]; i++) {
-        var reader = new FileReader();
-        // Closure to capture the file information.
-        reader.onload = (function(file) {
-            return function(e) {
-		log("sending sysex file "+file.name);
-		var data = new Uint8Array(e.target.result);
-		sendProgramData(data);
-            };
-        })(f);
-	console.log("reading file "+f.name);
-	reader.readAsArrayBuffer(f);
-    }
-}
-
-function sendProgramFromUrl(url){
-    console.log("sending patch from url "+url);
-    var oReq = new XMLHttpRequest();
-    oReq.responseType = "arraybuffer";
-    oReq.onload = function (oEvent) {
-	console.log("here");	
-	var arrayBuffer = oReq.response; // Note: not oReq.responseText
-	if(arrayBuffer) {
-	    console.log("there");	
-	    var data = new Uint8Array(arrayBuffer);
-	    sendProgramData(data);
-	}
-    }
-    oReq.open("GET", url, true);
-    oReq.send();
-}
-
-function toggleLed(){
-    if(ledColour == 'green')
-	ledColour = 'red';
-    else
-	ledColour = 'green';
-    if(ledColour == 'green')
-	sendCc(OpenWareMidiControl.LED, 63);
-    else if(ledColour == 'red')
-	sendCc(OpenWareMidiControl.LED, 127);
-    else
-	sendCc(OpenWareMidiControl.LED, 0);
-    sendRequest(OpenWareMidiControl.LED);
-}
-
-window.addEventListener('load', function() {
+// function hookupButtonEvents() {
     // Check for Midi/Midi SysEx permissions
 
     // if(navigator && navigator.permissions){
@@ -271,30 +225,71 @@ window.addEventListener('load', function() {
     //         navigator.requestMIDIAccess({sysex:false});
     // });
 
-    $("#patchupload").on('change', function(evt) {
-	sendProgram(evt);
-    });
+    // $("#connect").on('click', connectToOwl);
 
-    $("#connect").on('click', function() {
-    	if(navigator && navigator.requestMIDIAccess)
-            navigator.requestMIDIAccess({sysex:true});
-    	initialiseMidi(onMidiInitialised);
-    });
-
-    $("#monitor").on('click', function() {
-	if(monitorTask == undefined){
-	    monitorTask = window.setInterval(sendStatusRequest, 1000);
-	}else{
-	    clearInterval(monitorTask);
-	    monitorTask = undefined;
-	}
-    });
+    // $("#monitor").on('click', function() {
+    // 	if(monitorTask == undefined){
+    // 	    monitorTask = window.setInterval(sendStatusRequest, 1000);
+    // 	}else{
+    // 	    clearInterval(monitorTask);
+    // 	    monitorTask = undefined;
+    // 	}
+    // });
 
     // initialiseMidi(onMidiInitialised);
     
-    $('#clear').on('click', function() {
-	$('#log').empty();
-	return false;
-    });
+    // $('#clear').on('click', function() {
+    // 	$('#log').empty();
+    // 	return false;
+    // });
+// }
 
-} );
+function sendProgramData(data){
+    var from = 0;
+    console.log("sending program data "+data.length+" bytes");  
+    for(var i=0; i<data.length; ++i){
+    if(data[i] == 0xf0){
+        from = i;
+    }else if(data[i] == 0xf7){
+        console.log("sending "+(i-from)+" bytes sysex");
+        msg = data.subarray(from, i+1);
+        HoxtonOwl.midiClient.logMidiData(msg);
+        if(HoxtonOwl.midiClient.midiOutput)
+        {
+            HoxtonOwl.midiClient.midiOutput.send(msg, 0);            
+        }
+        sleep(1);
+    }
+    }
+}
+
+function sendProgramRun(){
+    console.log("sending sysex run command");
+    var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_DEVICE, 
+           OpenWareMidiSysexCommand.SYSEX_FIRMWARE_RUN, 0xf7 ];
+    HoxtonOwl.midiClient.logMidiData(msg);
+    if(HoxtonOwl.midiClient.midiOutput)
+    {
+        HoxtonOwl.midiClient.midiOutput.send(msg, 0);
+    }
+      
+}
+
+function sendProgramFromUrl(url){
+    console.log("sending patch from url "+url);
+    var oReq = new XMLHttpRequest();
+    oReq.responseType = "arraybuffer";
+    oReq.onload = function (oEvent) {
+    console.log("here");    
+    var arrayBuffer = oReq.response; // Note: not oReq.responseText
+    if(arrayBuffer) {
+        console.log("there");   
+        var data = new Uint8Array(arrayBuffer);
+        sendProgramData(data);
+        sendProgramRun();
+    }
+    }
+    oReq.open("GET", url, true);
+    oReq.send();
+}
+
