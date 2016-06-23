@@ -115,17 +115,27 @@ HoxtonOwl.midiClient = {
     },
 
     sendPc: function(value) {
+	value = parseInt(value);
         console.log("sending PC "+value);
         if(midiOutput)
           midiOutput.send([0xC0, value], 0);
     },
 
     sendCc: function(cc, value) {
+	cc = parseInt(cc);
+	value = parseInt(value);
         console.log("sending CC "+cc+"/"+value);
         if(this.midiOutput)
         {
           this.midiOutput.send([0xB0, cc, value], 0);            
         }
+    },
+
+    sendPb: function(value) {
+	value = parseInt(value);
+        console.log("sending PB "+value);
+        if(this.midiOutput)
+          this.midiOutput.send([0xE0, value&0x7f, (value>>7)&0x7f], 0); 
     },
 
     sendNoteOn: function(note, velocity) {

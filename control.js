@@ -44,24 +44,44 @@ $(document).ready(function() {
     });
 
     nx.onload = function(){
-	s1.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_A, data.value);});
-	s2.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_B, data.value);});
-	s3.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_C, data.value);});
-	s4.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_D, data.value);});
-	s5.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_E, data.value);});
-	rc.sendsTo(function(data){
-	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_CONTROL, data.val);	    
+	s1.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_A, data.value*127);});
+	s2.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_B, data.value*127);});
+	s3.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_C, data.value*127);});
+	s4.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_D, data.value*127);});
+	s5.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_E, data.value*127);});
+	s6.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_F, data.value*127);});
+	s7.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(0x12, data.value*127);});
+	s8.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_H, data.value*127);});
+	// pb.hslider = true;
+	// pb.draw();
+	pb.sendsTo(function(data){HoxtonOwl.midiClient.sendPb(data.value*16383);console.log(data)});
+	push.sendsTo(function(data){
+	    if(data.press != undefined)
+		HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_BUTTON, data.press*127);
 	    console.log(data);
 	});
-	sliders.setNumberOfSliders(8);
-	sliders.sendsTo(function(data){
+	rc.sendsTo(function(data){
+	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_CONTROL, data.value*127);
+	    console.log(data);
+	});
+	sliders1.setNumberOfSliders(8);
+	sliders1.sendsTo(function(data){
 	    var key = parseInt(Object.keys(data)[0]);
 	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AA+key, data[key]*127);
+	});
+	sliders2.setNumberOfSliders(8);
+	sliders2.sendsTo(function(data){
+	    var key = parseInt(Object.keys(data)[0]);
+	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_BA+key, data[key]*127);
 	});
 	keyboard.mode = "sustain";
 	keyboard.sendsTo(function(data){
 	    // there's a bug in keyboard that sends out velocity up to 128
 	    HoxtonOwl.midiClient.sendNoteOn(data.note, Math.min(data.on, 127));
+	});
+	metroball.sendsTo(function(data){
+	    console.log(data);
+	    HoxtonOwl.midiClient.sendNoteOn(data.x*127, data.side*60);
 	});
     };
 });
