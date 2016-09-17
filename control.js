@@ -50,11 +50,22 @@ $(document).ready(function() {
 	s4.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_D, data.value*127);});
 	s5.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_E, data.value*127);});
 	s6.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_F, data.value*127);});
-	s7.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(0x12, data.value*127);});
+	s7.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_G, data.value*127);});
 	s8.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_H, data.value*127);});
 	// pb.hslider = true;
 	// pb.draw();
 	pb.sendsTo(function(data){HoxtonOwl.midiClient.sendPb(data.value*16383);console.log(data)});
+	env.sendsTo(function(data){
+	    console.log(data);
+	    if(data.points.length > 1)
+	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AA, data.points[1].x*127); // attack
+	    if(data.points.length > 2)
+	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AB, data.points[2].x*127); // decay
+	    if(data.points.length > 3)
+	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AC, data.points[3].y*127); // sustain
+	    if(data.points.length > 4)
+	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AD, data.points[4].x*127); // release
+	});
 	push.sendsTo(function(data){
 	    if(data.press != undefined)
 		HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_BUTTON, data.press*127);

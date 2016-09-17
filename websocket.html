@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <title>Open Sound Module</title>
+  <script src="jquery.min.js"></script>
+  <script src="nexusUI.js"></script>
+  <script src="osc.js-2.1.0/dist/osc-browser.js"></script>
+  <script src="ws.js"></script>
+</head>
+
+  <h2>Open Sound Module</h2>
+
+  <div>
+    <button id="connect">Connect</button>
+    <button id="disconnect">Disconnect</button>
+  </div>
+
+  <div>
+    <canvas id="s1" nx="slider"></canvas>
+    <canvas id="s2" nx="slider"></canvas>
+    <canvas id="s3" nx="slider"></canvas>
+    <canvas id="s4" nx="slider"></canvas>
+    <canvas id="s5" nx="slider"></canvas>
+    <canvas id="push" nx="button"></canvas>
+    <canvas id="s6" nx="slider"></canvas>
+    <canvas id="s7" nx="slider"></canvas>
+    <canvas id="s8" nx="slider"></canvas>
+  </div>
+  <div>
+    <p>A:</p>
+    <canvas id="cvAtx" nx="slider"></canvas>
+    <canvas id="trAtx" nx="button"></canvas>
+    <canvas id="cvArx" nx="slider"></canvas>
+    <canvas id="trArx" nx="button"></canvas>
+  </div>
+  <div>
+    <p>AA to AD:</p>
+    <canvas id="cvAAtx" nx="slider"></canvas>
+    <canvas id="cvABtx" nx="slider"></canvas>
+    <canvas id="cvACtx" nx="slider"></canvas>
+    <canvas id="cvADtx" nx="slider"></canvas>
+  </div>
+  <div>
+    <h3>Messages</h3>
+    <button id="clear">Clear</button>
+    <ul id="log"></ul>
+  </div>
+
+</body>
+</html>

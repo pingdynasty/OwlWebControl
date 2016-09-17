@@ -35,24 +35,6 @@
 
   <div>
     <h3 id="patchname">...</h3>
-<!--
-    <form action="">
-      <input id="p1" type="range" min="0" max="1" step="0.001" onchange="setParameter(0, this.value)"/>
-      <input id="p1" type="range" min="0" max="1" step="0.001" onchange="setParameter(1, this.value)"/>
-      <input id="p1" type="range" min="0" max="1" step="0.001" onchange="setParameter(2, this.value)"/>
-      <input id="p1" type="range" min="0" max="1" step="0.001" onchange="setParameter(3, this.value)"/>
-      <input id="p1" type="range" min="0" max="1" step="0.001" onchange="setParameter(4, this.value)"/>
-
-      <hr/>
-      <input id="pAA" type="range" min="0" max="127" step="1" onchange="HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AA, this.value)"/>
-      <input id="pAB" type="range" min="0" max="127" step="1" onchange="HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AB, this.value)"/>
-      <input id="pAC" type="range" min="0" max="127" step="1" onchange="HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AC, this.value)"/>
-      <input id="pAD" type="range" min="0" max="127" step="1" onchange="HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AD, this.value)"/>
-      <input id="pAE" type="range" min="0" max="127" step="1" onchange="HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AE, this.value)"/>
-
-    </form>
--->
-
     <canvas id="s1" nx="slider"></canvas>
     <canvas id="s2" nx="slider"></canvas>
     <canvas id="s3" nx="slider"></canvas>
@@ -68,6 +50,7 @@
     <canvas id="sliders2" nx="multislider"></canvas>
     <canvas id="keyboard" nx="keyboard"></canvas>
     <canvas id="pb" nx="slider"></canvas>
+    <canvas id="env" nx="envelope"></canvas>
   </div>
   <div>
     <canvas id="rc" nx="toggle"></canvas>
