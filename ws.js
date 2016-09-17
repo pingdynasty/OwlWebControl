@@ -20,6 +20,10 @@ $(document).ready(function() {
 		console.log("/osm/a/cv "+msg.args[0]);
 	    }else if(msg.address == "/osm/a/tr"){
 		trArx.set({press: msg.args[0]}, false);
+	    }else if(msg.address == "/osm/b/cv"){
+		cvBrx.set({value: msg.args[0]}, false);
+	    }else if(msg.address == "/osm/b/tr"){
+		trBrx.set({press: msg.args[0]}, false);
 	    }else if(msg.address == "/osm/status"){
 		$("#log").append("Status: "+msg.args[0]).append("<br>");
 	    }else{
@@ -53,6 +57,8 @@ $(document).ready(function() {
     nx.onload = function(){
 	trAtx.mode = "toggle";
 	trArx.mode = "toggle";
+	trBtx.mode = "toggle";
+	trBrx.mode = "toggle";
 
 	cvAtx.sendsTo(function(data){
 	    var msg = { address: "/osm/a/cv", args: data.value };
@@ -66,6 +72,14 @@ $(document).ready(function() {
 	    // $("#log").append(JSON.stringify(msg)).append("<br>");
 	    if(oscPort)
 		oscPort.send(msg);
+	});
+
+	cvBtx.sendsTo(function(data){
+	    if(oscPort) oscPort.send({address: "/osm/b/cv", args: data.value });
+	});
+
+	trBtx.sendsTo(function(data){
+	    if(oscPort) oscPort.send({address: "/osm/b/tr", args: data.press });
 	});
 
 	cvAAtx.sendsTo(function(data){
