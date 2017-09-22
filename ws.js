@@ -85,7 +85,6 @@ $(document).ready(function() {
 	cvAAtx.sendsTo(function(data){
 	    if(oscPort) oscPort.send({address: "/osm/aa", args: data.value });
 	});
-
 	cvABtx.sendsTo(function(data){
 	    if(oscPort) oscPort.send({address: "/osm/ab", args: data.value });
 	});
@@ -94,6 +93,43 @@ $(document).ready(function() {
 	});
 	cvADtx.sendsTo(function(data){
 	    if(oscPort) oscPort.send({address: "/osm/ad", args: data.value });
+	});
+	cvAEtx.sendsTo(function(data){
+	    if(oscPort) oscPort.send({address: "/osm/ae", args: data.value });
+	});
+	cvAFtx.sendsTo(function(data){
+	    if(oscPort) oscPort.send({address: "/osm/af", args: data.value });
+	});
+	cvAGtx.sendsTo(function(data){
+	    if(oscPort) oscPort.send({address: "/osm/ag", args: data.value });
+	});
+	cvAHtx.sendsTo(function(data){
+	    if(oscPort) oscPort.send({address: "/osm/ah", args: data.value });
+	});
+
+	cvBAtx.sendsTo(function(data){
+	    if(oscPort) oscPort.send({address: "/osm/ba", args: data.value });
+	});
+	cvBBtx.sendsTo(function(data){
+	    if(oscPort) oscPort.send({address: "/osm/bb", args: data.value });
+	});
+	cvBCtx.sendsTo(function(data){
+	    if(oscPort) oscPort.send({address: "/osm/bc", args: data.value });
+	});
+	cvBDtx.sendsTo(function(data){
+	    if(oscPort) oscPort.send({address: "/osm/bd", args: data.value });
+	});
+	cvBEtx.sendsTo(function(data){
+	    if(oscPort) oscPort.send({address: "/osm/be", args: data.value });
+	});
+	cvBFtx.sendsTo(function(data){
+	    if(oscPort) oscPort.send({address: "/osm/bf", args: data.value });
+	});
+	cvBGtx.sendsTo(function(data){
+	    if(oscPort) oscPort.send({address: "/osm/bg", args: data.value });
+	});
+	cvBHtx.sendsTo(function(data){
+	    if(oscPort) oscPort.send({address: "/osm/bh", args: data.value });
 	});
 
     };
