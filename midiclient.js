@@ -3,7 +3,7 @@
  */
 var HoxtonOwl;
 if (!HoxtonOwl) {
-    HoxtonOwl = {};
+    HoxtonOwl = { };
 }
 
 HoxtonOwl.midiClient = {
@@ -14,6 +14,11 @@ HoxtonOwl.midiClient = {
     midiOutputs: [],
     midiOutput: null,
     midiInitialisedCallback: 'undefined',
+    midiChannel: 0,
+
+    setChannel: function(ch){
+	this.midiChannel = ch&0x0f;
+    },
 
     logMidiEvent: function(ev){
         HoxtonOwl.midiClient.logMidiData(ev.data);
@@ -22,35 +27,35 @@ HoxtonOwl.midiClient = {
     logMidiData: function(data){
       var arr = [];
       for(var i=0; i<data.length; i++) arr.push((data[i]<16 ? '0' : '') + data[i].toString(16));
-      console.log('MIDI:', arr.join(' '));
+      // console.log('MIDI:', arr.join(' '));
     },
 
     onMIDIInit: function(midi, options) {
-        log("MIDI sysex options: "+options);
-        log("MIDI sysex: "+midi.sysexEnabled);
-        log("MIDI onstatechange: "+midi.onstatechange);
+        console.log("MIDI sysex options: "+options);
+        console.log("MIDI sysex: "+midi.sysexEnabled);
+        console.log("MIDI onstatechange: "+midi.onstatechange);
         midiAccess = midi;
 
         var i = 0;
         var inputs = midiAccess.inputs.values();
         for(var input = inputs.next(); input && !input.done; input = inputs.next()) {
             HoxtonOwl.midiClient.midiInputs.push(input.value);
-        	console.log("added MIDI input "+input.value.name+" ("+input.value.manufacturer+") "+input.value.id);
+            console.log("added MIDI input "+input.value.name+" ("+input.value.manufacturer+") "+input.value.id);
         }
         if(inputs.size === 0)
-        	console.log("No MIDI input devices present.")
+            console.log("No MIDI input devices present.")
 
         i = 0;
         var outputs = midiAccess.outputs.values();
         for(var output = outputs.next(); output && !output.done; output = outputs.next()) {
             HoxtonOwl.midiClient.midiOutputs.push(output.value);
-        	console.log("added MIDI output "+output.value.name+" ("+output.value.manufacturer+") "+output.value.id);
+            console.log("added MIDI output "+output.value.name+" ("+output.value.manufacturer+") "+output.value.id);
         }
         if(outputs.size === 0)
-    	console.log("No MIDI output devices present.")
+    	    console.log("No MIDI output devices present.")
 
         if(midiInitialisedCallback)
-    	midiInitialisedCallback();
+    	    midiInitialisedCallback();
     },
 
     onMIDIReject: function(err) {
@@ -66,21 +71,21 @@ HoxtonOwl.midiClient = {
         HoxtonOwl.midiClient.logMidiEvent(event);
         switch(event.data[0] & 0xf0) {
         case 0x90:
-    	if(event.data[2] != 0) {  // if velocity != 0, this is a note-on message
-    	    noteOn(event.data[1], event.data[2]);
-    	    return;
-    	}
+    	    if(event.data[2] != 0) {  // if velocity != 0, this is a note-on message
+    		noteOn(event.data[1], event.data[2]);
+    		return;
+    	    }
         case 0x80:
-    	noteOff(event.data[1]);
-    	return;
+    	    noteOff(event.data[1]);
+    	    return;
         case 0xB0:
-    	controlChange(event.data[1], event.data[2]);
-    	return;
+    	    controlChange(event.data[0], event.data[1], event.data[2]);
+    	    return;
         case 0xC0:
-    	programChange(event.data[1]);
-    	return;
+    	    programChange(event.data[1]);
+    	    return;
         case 0xF0:
-      	systemExclusive(event.data);
+      	    systemExclusive(event.data);
     	// sysexMessage = sysexMessage.concat(event.data);
     	// console.log("sysex evt 0x"+event.data[0].toString(16)+":0x"+event.data[event.data.length-1].toString(16));
     	// console.log("sysex msg 0x"+sysexMessage[0].toString(16)+":0x"+sysexMessage[sysexMessage.length-1].toString(16));
@@ -101,8 +106,8 @@ HoxtonOwl.midiClient = {
         }
         midiInput = HoxtonOwl.midiClient.midiInputs[index];
         if(midiInput){
-        	console.log("selecting MIDI input "+index+": "+ midiInput.name+" ("+ midiInput.manufacturer+")");
-        	midiInput.onmidimessage = this.MIDIMessageEventHandler;
+            console.log("selecting MIDI input "+index+": "+ midiInput.name+" ("+ midiInput.manufacturer+")");
+            midiInput.onmidimessage = this.MIDIMessageEventHandler;
         }
     },
 
@@ -118,7 +123,18 @@ HoxtonOwl.midiClient = {
 	value = parseInt(value);
         console.log("sending PC "+value);
         if(midiOutput)
-          midiOutput.send([0xC0, value], 0);
+          midiOutput.send([0xC0|this.midiChannel, value], 0);
+    },
+
+    sendChCc: function(ch, cc, value) {
+	ch = parseInt(ch);
+	cc = parseInt(cc);
+	value = parseInt(value);
+        console.log("sending CC "+ch+"/"+cc+"/"+value);
+        if(this.midiOutput)
+        {
+          this.midiOutput.send([0xB0|ch, cc, value], 0);            
+        }
     },
 
     sendCc: function(cc, value) {
@@ -127,7 +143,7 @@ HoxtonOwl.midiClient = {
         console.log("sending CC "+cc+"/"+value);
         if(this.midiOutput)
         {
-          this.midiOutput.send([0xB0, cc, value], 0);            
+          this.midiOutput.send([0xB0|this.midiChannel, cc, value], 0);            
         }
     },
 
@@ -135,14 +151,14 @@ HoxtonOwl.midiClient = {
 	value = parseInt(value);
         console.log("sending PB "+value);
         if(this.midiOutput)
-          this.midiOutput.send([0xE0, value&0x7f, (value>>7)&0x7f], 0); 
+          this.midiOutput.send([0xE0|this.midiChannel, value&0x7f, (value>>7)&0x7f], 0); 
     },
 
     sendNoteOn: function(note, velocity) {
         console.log("sending note on "+note+"/"+velocity);
         if(this.midiOutput)
         {
-          this.midiOutput.send([0x90, note, velocity], 0);            
+          this.midiOutput.send([0x90|this.midiChannel, note, velocity], 0);            
         }
     },
 
@@ -150,7 +166,7 @@ HoxtonOwl.midiClient = {
         console.log("sending note off "+note+"/"+velocity);
         if(this.midiOutput)
         {
-          this.midiOutput.send([0x80, note, velocity], 0);            
+          this.midiOutput.send([0x80|this.midiChannel, note, velocity], 0);            
         }
     },
 
@@ -186,13 +202,10 @@ HoxtonOwl.midiClient = {
 
     initialiseMidi: function(callback){
         midiInitialisedCallback = callback;
-        window.AudioContext = window.AudioContext||window.webkitAudioContext;
-        context = new AudioContext();
-        var options = { sysex: true };
         if(navigator.requestMIDIAccess)
-    	navigator.requestMIDIAccess( { sysex: true } ).then( this.onMIDIInit, this.onMIDIReject );
+    	    navigator.requestMIDIAccess( { sysex: true } ).then( this.onMIDIInit, this.onMIDIReject );
         else
-    	alert("No MIDI support present in your browser.")
+    	    alert("No MIDI support present in your browser.")
     }
 
 }

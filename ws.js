@@ -9,7 +9,7 @@ $(document).ready(function() {
 
     $("#connect").on("click", function() {
 	oscPort = new osc.WebSocketPort({
-            url: "ws://192.168.0.1:8008/osc",
+            url: "ws://localhost:8008/osc",
 	    useSLIP: false
         });
 

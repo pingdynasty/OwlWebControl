@@ -15,19 +15,10 @@
 
   <h2><span id="firmwareversion">OpenWareLaboratory</span></h2>
 
-  <p>MIDI In
-  <select id="midiInputs" onchange="openMidiInput(this.value)">
-    <option value="0xff"><i>none</i></option>
-  </select>
-  </p>
-
-  <p>MIDI Out
-  <select id="midiOutputs" onchange="openMidiOutput(this.value)">
-    <option value="0xff"><i>none</i></option>
-  </select>
+<p>
   Monitor: <input id="monitor" type="button"/>
   Connect: <input id="connect" type="button"/>
-  </p>
+</p>
 
   <p>Patches
       <select id="patchnames" onchange="selectPatch(this.value)"></select>
@@ -48,15 +39,17 @@
   <div>
     <canvas id="sliders1" nx="multislider"></canvas>
     <canvas id="sliders2" nx="multislider"></canvas>
+</div>
+  <div>
     <canvas id="keyboard" nx="keyboard"></canvas>
     <canvas id="pb" nx="slider"></canvas>
-    <canvas id="env" nx="envelope"></canvas>
+    <!-- <canvas id="env" nx="envelope"></canvas> -->
   </div>
-  <div>
-    <canvas id="rc" nx="toggle"></canvas>
-    <canvas id="ghost" nx="ghost"></canvas>
-    <canvas id="metroball" nx="metroball"></canvas>
-  </div>
+  <!-- <div> -->
+  <!--   <canvas id="rc" nx="toggle"></canvas> -->
+  <!--   <canvas id="ghost" nx="ghost"></canvas> -->
+  <!--   <canvas id="metroball" nx="metroball"></canvas> -->
+  <!-- </div> -->
 
   <div>
     <h3>Status</h3>
@@ -108,5 +101,17 @@
     <ul id="log"></ul>
   </div>
 
+
+  <p>MIDI In
+  <select id="midiInputs" onchange="openMidiInput(this.value)">
+    <option value="0xff"><i>none</i></option>
+  </select>
+  </p>
+
+  <p>MIDI Out
+  <select id="midiOutputs" onchange="openMidiOutput(this.value)">
+    <option value="0xff"><i>none</i></option>
+  </select>
+  </p>
 </body>
 </html>

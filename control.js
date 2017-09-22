@@ -1,4 +1,10 @@
 
+function controlChange(status, cc, value){
+    var ch = parseInt(status)&0x0f;
+    cc = parseInt(cc);
+    console.log("received CC "+ch+":"+cc+":"+value);
+}
+
 $(document).ready(function() {
     // if(navigator && navigator.permissions){
     // 	navigator.permissions.query({name:'midi', sysex:false}).then(function(p) {
@@ -23,12 +29,7 @@ $(document).ready(function() {
 
     $("#connect").on('click', function() {
     	console.log("connect");
-    	if(navigator && navigator.requestMIDIAccess)
-            navigator.requestMIDIAccess({sysex:true});
-	connectToOwl();
-    	// if(navigator && navigator.requestMIDIAccess)
-        //     navigator.requestMIDIAccess({sysex:true});
-    	// HoxtonOwl.midiClient.initialiseMidi(HoxtonOwl.midiClient.onMidiInitialised);
+	// HoxtonOwl.midiClient.initialiseMidi(onMidiInitialised);
     });
 
     $("#monitor").on('click', function() {
@@ -55,26 +56,26 @@ $(document).ready(function() {
 	// pb.hslider = true;
 	// pb.draw();
 	pb.sendsTo(function(data){HoxtonOwl.midiClient.sendPb(data.value*16383);console.log(data)});
-	env.sendsTo(function(data){
-	    console.log(data);
-	    if(data.points.length > 1)
-	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AA, data.points[1].x*127); // attack
-	    if(data.points.length > 2)
-	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AB, data.points[2].x*127); // decay
-	    if(data.points.length > 3)
-	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AC, data.points[3].y*127); // sustain
-	    if(data.points.length > 4)
-	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AD, data.points[4].x*127); // release
-	});
+	// env.sendsTo(function(data){
+	//     console.log(data);
+	//     if(data.points.length > 1)
+	//     HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AA, data.points[1].x*127); // attack
+	//     if(data.points.length > 2)
+	//     HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AB, data.points[2].x*127); // decay
+	//     if(data.points.length > 3)
+	//     HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AC, data.points[3].y*127); // sustain
+	//     if(data.points.length > 4)
+	//     HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_AD, data.points[4].x*127); // release
+	// });
 	push.sendsTo(function(data){
 	    if(data.press != undefined)
 		HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_BUTTON, data.press*127);
 	    console.log(data);
 	});
-	rc.sendsTo(function(data){
-	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_CONTROL, data.value*127);
-	    console.log(data);
-	});
+	// rc.sendsTo(function(data){
+	//     HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_CONTROL, data.value*127);
+	//     console.log(data);
+	// });
 	sliders1.setNumberOfSliders(8);
 	sliders1.sendsTo(function(data){
 	    var key = parseInt(Object.keys(data)[0]);
@@ -90,9 +91,11 @@ $(document).ready(function() {
 	    // there's a bug in keyboard that sends out velocity up to 128
 	    HoxtonOwl.midiClient.sendNoteOn(data.note, Math.min(data.on, 127));
 	});
-	metroball.sendsTo(function(data){
-	    console.log(data);
-	    HoxtonOwl.midiClient.sendNoteOn(data.x*127, data.side*60);
-	});
+	// metroball.sendsTo(function(data){
+	//     console.log(data);
+	//     HoxtonOwl.midiClient.sendNoteOn(data.x*127, data.side*60);
+	// });
     };
+
+    HoxtonOwl.midiClient.initialiseMidi(onMidiInitialised);
 });

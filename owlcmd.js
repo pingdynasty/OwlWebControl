@@ -82,23 +82,23 @@ function systemExclusive(data) {
     }
 }
 
-function controlChange(cc, value){
-    console.log("received CC "+cc+": "+value);
-    switch(cc){
-    case OpenWareMidiControl.PATCH_PARAMETER_A:
-	$("#p1").val(value);
-	break;
-    case OpenWareMidiControl.PATCH_PARAMETER_B:
-	$("#p2").val(value);
-	break;
-    case OpenWareMidiControl.PATCH_PARAMETER_C:
-	$("#p3").val(value);
-	break;
-    case OpenWareMidiControl.PATCH_PARAMETER_Da:
-	$("#p4").val(value);
-	break;
-    }
-}
+// function controlChange(cc, value){
+//     console.log("received CC "+cc+": "+value);
+//     switch(cc){
+//     case OpenWareMidiControl.PATCH_PARAMETER_A:
+// 	$("#p1").val(value);
+// 	break;
+//     case OpenWareMidiControl.PATCH_PARAMETER_B:
+// 	$("#p2").val(value);
+// 	break;
+//     case OpenWareMidiControl.PATCH_PARAMETER_C:
+// 	$("#p3").val(value);
+// 	break;
+//     case OpenWareMidiControl.PATCH_PARAMETER_D:
+// 	$("#p4").val(value);
+// 	break;
+//     }
+// }
 
 function programChange(pc){
     console.log("received PC "+pc);
@@ -131,14 +131,10 @@ function setParameter(pid, value){
 }
 
 function selectOwlPatch(pid){
-    var parameter_map = [' ', 'a', 'b', 'c', 'd', 'e'];
-
+    // var parameter_map = [' ', 'a', 'b', 'c', 'd', 'e'];
     console.log("select patch "+pid);
-
-    for(i=0; i<5; ++i) {
+    for(i=0; i<5; ++i)
         $("#p"+i).text(""); // clear the prototype slider names
-    }
-    
     sendPc(pid);
 }
 
@@ -172,19 +168,21 @@ function onMidiInitialised(){
 
     if (inConnected && outConnected) {
         console.log('connected to an OWL');
-        $('#ourstatus').text('Connected to an OWL')
+        $('#ourstatus').text('Connected')
         $('#load-owl-button').show();
     } else {
         console.log('failed to connect to an OWL');
-        $('#ourstatus').text('Failed to connect to an OWL')
+        $('#ourstatus').text('Failed to connect')
         $('#load-owl-button').hide();
     }
 
+    console.log("SysEx enabled: "+(HoxtonOwl.midiClient.midiAccess && HoxtonOwl.midiClient.midiAccess.sysexEnabled));
+
     // sendLoadRequest(); // load patches
-    sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION);
+    // sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION);
     // sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_ID);
     // sendRequest(127);
-    statusRequestLoop();
+    // statusRequestLoop();
 }
 
 function updatePermission(name, status) {
