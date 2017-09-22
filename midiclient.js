@@ -122,8 +122,8 @@ HoxtonOwl.midiClient = {
     sendPc: function(value) {
 	value = parseInt(value);
         console.log("sending PC "+value);
-        if(midiOutput)
-          midiOutput.send([0xC0|this.midiChannel, value], 0);
+        if(this.midiOutput)
+          this.midiOutput.send([0xC0|this.midiChannel, value], 0);
     },
 
     sendChCc: function(ch, cc, value) {
@@ -132,9 +132,7 @@ HoxtonOwl.midiClient = {
 	value = parseInt(value);
         console.log("sending CC "+ch+"/"+cc+"/"+value);
         if(this.midiOutput)
-        {
           this.midiOutput.send([0xB0|ch, cc, value], 0);            
-        }
     },
 
     sendCc: function(cc, value) {
@@ -176,16 +174,16 @@ HoxtonOwl.midiClient = {
     //     msg.push.apply(msg, data.split(''));
     //     msg.push(0xf7);
     //     logMidiData(msg);
-    //     if(midiOutput)
-    //       midiOutput.send(msg, 0);
+    //     if(this.midiOutput)
+    //       this.midiOutput.send(msg, 0);
     // }
 
     sendSysexCommand: function(cmd) {
         console.log("sending sysex command 0x"+cmd.toString(16));
         var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_DEVICE, cmd, 0xf7 ];
         logMidiData(msg);
-        if(midiOutput)
-          midiOutput.send(msg, 0);
+        if(this.midiOutput)
+          this.midiOutput.send(msg, 0);
     },
 
     sendSysexData: function(cmd, data) {
@@ -196,8 +194,8 @@ HoxtonOwl.midiClient = {
         // msg.push.apply(msg, data);
         msg.push(0xf7);
         logMidiData(msg);
-        if(midiOutput)
-          midiOutput.send(msg, 0);
+        if(this.midiOutput)
+          this.midiOutput.send(msg, 0);
     },
 
     initialiseMidi: function(callback){

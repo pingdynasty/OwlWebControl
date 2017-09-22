@@ -5,6 +5,12 @@ function controlChange(status, cc, value){
     console.log("received CC "+ch+":"+cc+":"+value);
 }
 
+function selectPatch(idx){
+    console.log("select patch "+idx);
+    HoxtonOwl.midiClient.sendPc(idx);    
+    // patchname.innerHTML = "";
+}
+
 $(document).ready(function() {
     // if(navigator && navigator.permissions){
     // 	navigator.permissions.query({name:'midi', sysex:false}).then(function(p) {
