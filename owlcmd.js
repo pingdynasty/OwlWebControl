@@ -144,12 +144,9 @@ function sendLoadRequest(){
 }
 
 function onMidiInitialised(){
-
-    // auto set the input and output to an OWL
-    
+    // auto set the input and output to an OWL   
     var outConnected = false,
         inConnected = false;
-
     for (var o = 0; o < HoxtonOwl.midiClient.midiOutputs.length; o++) {
         if (HoxtonOwl.midiClient.midiOutputs[o].name.match('^OWL-MIDI')) {
             HoxtonOwl.midiClient.selectMidiOutput(o);
@@ -157,7 +154,6 @@ function onMidiInitialised(){
             break;
         }        
     }
-
     for (var i = 0; i < HoxtonOwl.midiClient.midiInputs.length; i++) {
         if (HoxtonOwl.midiClient.midiInputs[i].name.match('^OWL-MIDI')) {
             HoxtonOwl.midiClient.selectMidiInput(i);
@@ -165,24 +161,20 @@ function onMidiInitialised(){
             break;
         }        
     }
-
     if (inConnected && outConnected) {
         console.log('connected to an OWL');
         $('#ourstatus').text('Connected')
         $('#load-owl-button').show();
+	sendLoadRequest(); // load patches
+	sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION);
+    // sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_ID);
+    // sendRequest(127);
+    // statusRequestLoop();
     } else {
         console.log('failed to connect to an OWL');
         $('#ourstatus').text('Failed to connect')
         $('#load-owl-button').hide();
     }
-
-    console.log("SysEx enabled: "+(HoxtonOwl.midiClient.midiAccess && HoxtonOwl.midiClient.midiAccess.sysexEnabled));
-
-    // sendLoadRequest(); // load patches
-    // sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION);
-    // sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_ID);
-    // sendRequest(127);
-    // statusRequestLoop();
 }
 
 function updatePermission(name, status) {
@@ -192,9 +184,7 @@ function updatePermission(name, status) {
 
 function connectToOwl() {
     if(navigator && navigator.requestMIDIAccess)
-    {
         navigator.requestMIDIAccess({sysex:true});
-    }
     HoxtonOwl.midiClient.initialiseMidi(onMidiInitialised);
 }
 
@@ -241,6 +231,45 @@ function connectToOwl() {
     // 	return false;
     // });
 // }
+
+function sendProgram(evt){
+    var files = evt.target.files; // FileList object
+    // files is a FileList of File objects. List some properties.
+    var output = [];
+    for (var i = 0, f; f = files[i]; i++) {
+	output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                    f.size, ' bytes, last modified: ',
+                    f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                    '</li>');
+    }
+    document.getElementById('filenames').innerHTML = '<ul>' + output.join('') + '</ul>';
+
+    var reader = new FileReader();
+    for (var i = 0, f; f = files[i]; i++) {
+	// Only process syx files.
+	// if (!f.name.match('*\\.syx')) {
+        //     continue;
+	// }
+	    var reader = new FileReader();
+
+      // Closure to capture the file information.
+      reader.onload = (function(theFile) {
+        return function(e) {
+          // // Render thumbnail.
+          // var span = document.createElement('span');
+          // span.innerHTML = ['<img class="thumb" src="', e.target.result,
+          //                   '" title="', escape(theFile.name), '"/>'].join('');
+          // document.getElementById('list').insertBefore(span, null);
+	    console.log("read file "+theFile.name);
+	    sendProgramFromUrl(e.target.result);
+        };
+      })(f);
+
+      // Read in the image file as a data URL.
+      reader.readAsDataURL(f);
+	// reader.readAsBinaryString(f);
+    }
+}
 
 function sendProgramData(data){
     var from = 0;

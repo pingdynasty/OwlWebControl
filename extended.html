@@ -10,6 +10,9 @@
   <script src="owlcmd.js"></script>
   <script src="control.js"></script>
   <script src="nexusUI.js"></script>	
+  <style>
+    td { text-align: center; }
+</style>
 </head>
 
   <h2><span id="firmwareversion">OpenWareLaboratory</span></h2>
@@ -25,15 +28,30 @@
 
   <div>
     <h3 id="patchname">...</h3>
-    <canvas id="s1" nx="slider"></canvas>
-    <canvas id="s2" nx="slider"></canvas>
-    <canvas id="s3" nx="slider"></canvas>
-    <canvas id="s4" nx="slider"></canvas>
-    <canvas id="s5" nx="slider"></canvas>
-    <canvas id="push" nx="button"></canvas>
-    <canvas id="s6" nx="slider"></canvas>
-    <canvas id="s7" nx="slider"></canvas>
-    <canvas id="s8" nx="slider"></canvas>
+    <table>
+      <tr>
+	<td><canvas id="s1" nx="slider"></canvas></td>
+	<td><canvas id="s2" nx="slider"></canvas></td>
+	<td><canvas id="s3" nx="slider"></canvas></td>
+	<td><canvas id="s4" nx="slider"></canvas></td>
+	<td><canvas id="s5" nx="slider"></canvas></td>
+	<td><canvas id="s6" nx="slider"></canvas></td>
+	<td><canvas id="s7" nx="slider"></canvas></td>
+	<td><canvas id="s8" nx="slider"></canvas></td>
+	<td><canvas id="push" nx="button"></canvas></td>
+      </tr>
+      <tr>
+	<td>A</td>
+	<td>B</td>
+	<td>C</td>
+	<td>D</td>
+	<td>E</td>
+	<td>F</td>
+	<td>G</td>
+	<td>H</td>
+	<td>Push</td>
+      </tr>
+    </table>
   </div>
   <div>
     <canvas id="sliders1" nx="multislider"></canvas>
@@ -41,7 +59,7 @@
 </div>
   <div>
     <canvas id="keyboard" nx="keyboard"></canvas>
-    <canvas id="pb" nx="slider"></canvas>
+    <!-- <canvas id="pb" nx="slider"></canvas> -->
     <!-- <canvas id="env" nx="envelope"></canvas> -->
   </div>
   <!-- <div> -->
@@ -62,6 +80,7 @@
   <div>
     <h3>Upload Patch</h3>
     <input id="patchupload" type="file" name="files[]" multiple="true" />
+    <output id="filenames"/>
     Run <input type="button" onclick="sendProgramRun(); return false;"/>
     Store 0 <input type="button" onclick="sendProgramStore(0); return false;"/>
     Store 1 <input type="button" onclick="sendProgramStore(1); return false;"/>
