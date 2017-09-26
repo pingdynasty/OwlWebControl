@@ -5,7 +5,6 @@
   <meta charset="utf-8" />
   <title>OpenWareLaboratory</title>
   <script src="jquery.min.js"></script>
-  <script src="WebMIDIAPI.js"></script>
   <script src="midiclient.js"></script>
   <script src="OpenWareMidiControl.js"></script>
   <script src="owlcmd.js"></script>
@@ -113,9 +112,24 @@ input[type="number"] { width: 40px; }
 </table>
 </div>
 
+  <div>
+    <h3>Status</h3>
+    <p id="ourstatus"></p>
+    <p id="patchstatus"></p>
+    <p id="patchmessage"></p>
+    <p id="deviceid"></p>
+    <p>Poll 
+      <input id="poll" type="checkbox" checked="true" onclick="setMonitor(this.checked); return true;"/>
+    </p>
+    <!-- <p>Messages -->
+    <!--   <button id="clear">Clear</button> -->
+    <!--   <ul id="log"></ul> -->
+    <!-- </p> -->
+  </div>
+
 <br/>
 
-<div>
+<div>Algorithms
 <pre>
     1:
     // 0>1>2>3>
@@ -173,22 +187,8 @@ input[type="number"] { width: 40px; }
     // 3>3>2>
     //     0>1>
 </pre>
+  <p>This is an experimental control page for the OWL <a href="https://hoxtonowl.com/patch-library/patch/Quad_FM/">Quad FM Patch</a></p>
 </div>
-
-  <div>
-    <h3>Status</h3>
-    <p id="ourstatus"></p>
-    <p id="patchstatus"></p>
-    <p id="patchmessage"></p>
-    <p id="deviceid"></p>
-    <p>Poll 
-      <input id="poll" type="checkbox" checked="true" onclick="setMonitor(this.checked); return true;"/>
-    </p>
-    <!-- <p>Messages -->
-    <!--   <button id="clear">Clear</button> -->
-    <!--   <ul id="log"></ul> -->
-    <!-- </p> -->
-  </div>
 
 </body>
 </html>

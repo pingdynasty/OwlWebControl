@@ -58,11 +58,8 @@ function setPreset(idx){
 	updateValue(ai, 11);
     }
 }
+
 $(document).ready(function() {
-    $('#clear').on('click', function() {
-	$('#log').empty();
-	return false;
-    });
     connectToOwl();
     setPreset(1);
 });

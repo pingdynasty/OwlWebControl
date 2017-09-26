@@ -102,6 +102,7 @@ function systemExclusive(data) {
 
 function programChange(pc){
     console.log("received PC "+pc);
+    resetParameterNames();
     var name = $("#patchnames option:eq("+pc+")").text();
     console.log("patch name "+name);
     $("#patchname").text(name);			    
@@ -116,6 +117,7 @@ function sendStatusRequest(){
     sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE);
     sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_STATS);
     sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_STATS);
+    sendRequest(OpenWareMidiControl.PATCH_PARAMETER_A); // request parameter values
 }
 
 var doStatusRequestLoop = true;
@@ -130,11 +132,13 @@ function setParameter(pid, value){
     HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_A+pid, value);
 }
 
+function resetParameterNames(){
+    for(i=0; i<=5; ++i)
+        $("#p"+i).text(String.fromCharCode(64+i)); // reset the prototype slider names
+}
+
 function selectOwlPatch(pid){
-    // var parameter_map = [' ', 'a', 'b', 'c', 'd', 'e'];
     console.log("select patch "+pid);
-    for(i=0; i<5; ++i)
-        $("#p"+i).text(""); // clear the prototype slider names
     sendPc(pid);
 }
 

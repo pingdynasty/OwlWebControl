@@ -32,11 +32,11 @@
 	<td><canvas id="push" nx="button"></canvas></td>
       </tr>
       <tr>
-	<td>A</td>
-	<td>B</td>
-	<td>C</td>
-	<td>D</td>
-	<td>E</td>
+	<td id="p1">A</td>
+	<td id="p2">B</td>
+	<td id="p3">C</td>
+	<td id="p4">D</td>
+	<td id="p5">E</td>
 	<td>F</td>
 	<td>G</td>
 	<td>H</td>
@@ -74,6 +74,7 @@
     <h3>Patches</h3>
     <p>Presets
       <select id="patchnames" onchange="selectPatch(this.value)"></select>
+      <!-- <select id="patchnames" onchange="selectPatch(this.value)"></select> -->
     </p>
     <p>Upload
       <input id="patchupload" type="file" name="files[]" multiple="true" accept=".syx,.sysex" />
@@ -119,6 +120,7 @@
     device id <input type="button" onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_ID); return false;"/>
     version <input type="button" onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION); return false;"/>
     settings <input type="button" onclick="sendRequest(127); return false;"/>
+    parameter values <input type="button" onclick="sendRequest(OpenWareMidiControl.PATCH_PARAMETER_A); return false;"/>
   </div>
 
   <div>
