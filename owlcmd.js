@@ -165,11 +165,12 @@ function onMidiInitialised(){
         console.log('connected to an OWL');
         $('#ourstatus').text('Connected')
         $('#load-owl-button').show();
-	sendLoadRequest(); // load patches
 	sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION);
-    // sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_ID);
-    // sendRequest(127);
-    // statusRequestLoop();
+	sendLoadRequest(); // load patches
+	// sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_ID);
+	// sendRequest(127);
+	// statusRequestLoop();
+	setMonitor(true);
     } else {
         console.log('failed to connect to an OWL');
         $('#ourstatus').text('Failed to connect')
@@ -183,35 +184,23 @@ function updatePermission(name, status) {
 }
 
 function connectToOwl() {
-    if(navigator && navigator.requestMIDIAccess)
+    if(navigator && navigator.requestMIDIAccess){
         navigator.requestMIDIAccess({sysex:true});
-    HoxtonOwl.midiClient.initialiseMidi(onMidiInitialised);
+	HoxtonOwl.midiClient.initialiseMidi(onMidiInitialised);
+    }
+}
+
+var monitorTask = undefined;
+function setMonitor(poll){
+    if(poll && monitorTask == undefined){
+    	monitorTask = window.setInterval(sendStatusRequest, 1000);
+    }else if(!poll && monitorTask != undefined){
+    	clearInterval(monitorTask);
+    	monitorTask = undefined;
+    }
 }
 
 // function hookupButtonEvents() {
-    // Check for Midi/Midi SysEx permissions
-
-    // if(navigator && navigator.permissions){
-    // 	navigator.permissions.query({name:'midi', sysex:false}).then(function(p) {
-    //         updatePermission('midi', p.status);
-    //         p.onchange = function() {
-    // 		updatePermission('midi', this.status);
-    //         };
-    // 	});
-
-    // 	navigator.permissions.query({name:'midi', sysex:true}).then(function(p) {
-    //         updatePermission('midi-sysex', p.status);
-    //         p.onchange = function() {
-    // 		updatePermission('midi-sysex', this.status);
-    // 		initialiseMidi(onMidiInitialised);
-    //         };
-    // 	});
-    // }
-
-    // $("#midi").on('click', function() {
-    // 	if(navigator && navigator.requestMIDIAccess)
-    //         navigator.requestMIDIAccess({sysex:false});
-    // });
 
     // $("#connect").on('click', connectToOwl);
 
@@ -234,61 +223,40 @@ function connectToOwl() {
 
 function sendProgram(evt){
     var files = evt.target.files; // FileList object
-    // files is a FileList of File objects. List some properties.
-    var output = [];
-    for (var i = 0, f; f = files[i]; i++) {
-	output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
-                    f.size, ' bytes, last modified: ',
-                    f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-                    '</li>');
-    }
-    document.getElementById('filenames').innerHTML = '<ul>' + output.join('') + '</ul>';
-
+    // // files is a FileList of File objects. List some properties.
+    // var output = [];
+    // for (var i = 0, f; f = files[i]; i++) {
+    // 	output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+    //                 f.size, ' bytes, last modified: ',
+    //                 f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+    //                 '</li>');
+    // }
+    // document.getElementById('filenames').innerHTML = '<ul>' + output.join('') + '</ul>';
     var reader = new FileReader();
     for (var i = 0, f; f = files[i]; i++) {
 	// Only process syx files.
 	// if (!f.name.match('*\\.syx')) {
         //     continue;
 	// }
-	    var reader = new FileReader();
+	var reader = new FileReader();
 
-      // Closure to capture the file information.
-      reader.onload = (function(theFile) {
-        return function(e) {
-          // // Render thumbnail.
-          // var span = document.createElement('span');
-          // span.innerHTML = ['<img class="thumb" src="', e.target.result,
-          //                   '" title="', escape(theFile.name), '"/>'].join('');
-          // document.getElementById('list').insertBefore(span, null);
-	    console.log("read file "+theFile.name);
-	    sendProgramFromUrl(e.target.result);
-        };
-      })(f);
-
-      // Read in the image file as a data URL.
-      reader.readAsDataURL(f);
+	// Closure to capture the file information.
+	reader.onload = (function(theFile) {
+            return function(e) {
+		console.log("read file "+theFile.name);
+		sendProgramFromUrl(e.target.result);
+		// sendProgramData(e.target.result).then(function(){
+		//     sendProgramRun();
+		// }, function(err){
+		//     console.error(err);
+		// });
+            };
+	})(f);
+	reader.readAsDataURL(f);
 	// reader.readAsBinaryString(f);
     }
 }
 
-function sendProgramData(data){
-    var from = 0;
-    console.log("sending program data "+data.length+" bytes");  
-    for(var i=0; i<data.length; ++i){
-    if(data[i] == 0xf0){
-        from = i;
-    }else if(data[i] == 0xf7){
-        console.log("sending "+(i-from)+" bytes sysex");
-        msg = data.subarray(from, i+1);
-        HoxtonOwl.midiClient.logMidiData(msg);
-        if(HoxtonOwl.midiClient.midiOutput)
-        {
-            HoxtonOwl.midiClient.midiOutput.send(msg, 0);            
-        }
-        sleep(1);
-    }
-    }
-}
 
 function sendProgramRun(){
     console.log("sending sysex run command");
@@ -296,27 +264,93 @@ function sendProgramRun(){
            OpenWareMidiSysexCommand.SYSEX_FIRMWARE_RUN, 0xf7 ];
     HoxtonOwl.midiClient.logMidiData(msg);
     if(HoxtonOwl.midiClient.midiOutput)
-    {
         HoxtonOwl.midiClient.midiOutput.send(msg, 0);
+}
+
+function chunkData(data){
+    var chunks = [];
+    var start = 0;
+    for(var i = 0; i < data.length; ++i){
+        if(data[i] == 0xf0){
+            start = i;
+        } else if(data[i] == 0xf7){
+            chunks.push(data.subarray(start, i + 1));
+        }
     }
-      
+    return chunks;
+}
+
+var sendDataTimeout;
+function sendDataChunks(index, chunks, resolve){
+    index = index || 0;
+    if(sendDataTimeout){
+        window.clearTimeout(sendDataTimeout);
+        sendDataTimeout = null;
+    }
+    if(index < chunks.length){
+        HoxtonOwl.midiClient.logMidiData(chunks[index]);
+        if(HoxtonOwl.midiClient.midiOutput){
+            //console.log("sending chunk "+ index + ' with '+ chunks[index].length +" bytes sysex");
+            HoxtonOwl.midiClient.midiOutput.send(chunks[index], 0);            
+        }
+        sendDataTimeout = window.setTimeout(function(){
+            sendDataChunks(++index, chunks, resolve);
+        },0);
+    } else {
+        resolve && resolve();
+    }
+}
+
+function sendProgramData(data){
+    return new Promise( (resolve, reject) => {
+        console.log("sending program data "+data.length+" bytes"); 
+        var chunks = chunkData(data);
+        sendDataChunks(0, chunks, resolve);
+    });
 }
 
 function sendProgramFromUrl(url){
-    console.log("sending patch from url "+url);
-    var oReq = new XMLHttpRequest();
-    oReq.responseType = "arraybuffer";
-    oReq.onload = function (oEvent) {
-    console.log("here");    
-    var arrayBuffer = oReq.response; // Note: not oReq.responseText
-    if(arrayBuffer) {
-        console.log("there");   
-        var data = new Uint8Array(arrayBuffer);
-        sendProgramData(data);
-        sendProgramRun();
-    }
-    }
-    oReq.open("GET", url, true);
-    oReq.send();
+    return new Promise((resolve, reject) => {
+        console.log("sending patch from url "+url.substring(0, 64));
+        var oReq = new XMLHttpRequest();
+        oReq.responseType = "arraybuffer";
+        oReq.onload = function (oEvent) {   
+            var arrayBuffer = oReq.response; // Note: not oReq.responseText
+            if(arrayBuffer) {  
+                var data = new Uint8Array(arrayBuffer);
+                resolve(
+                    sendProgramData(data).then(function(){
+                        sendProgramRun();
+                    }, function(err){
+                        console.error(err);
+                    })
+                );
+            }
+        }
+        oReq.open("GET", url, true);
+        oReq.send();
+    });
 }
+
+function loadPatchFromServer(patchId){
+    return sendProgramFromUrl(API_END_POINT + '/builds/' + patchId + '?format=sysx&amp;download=1');
+}
+
+// function sendProgramFromUrl(url){
+//     console.log("sending patch from url "+url);
+//     var oReq = new XMLHttpRequest();
+//     oReq.responseType = "arraybuffer";
+//     oReq.onload = function (oEvent) {
+//     console.log("here");    
+//     var arrayBuffer = oReq.response; // Note: not oReq.responseText
+//     if(arrayBuffer) {
+//         console.log("there");   
+//         var data = new Uint8Array(arrayBuffer);
+//         sendProgramData(data);
+//         sendProgramRun();
+//     }
+//     }
+//     oReq.open("GET", url, true);
+//     oReq.send();
+// }
 

@@ -12,37 +12,8 @@ function selectPatch(idx){
 }
 
 $(document).ready(function() {
-    // if(navigator && navigator.permissions){
-    // 	navigator.permissions.query({name:'midi', sysex:false}).then(function(p) {
-    // 	    updatePermission('midi', p.status);
-    // 	    p.onchange = function() {
-    // 		updatePermission('midi', this.status);
-    // 	    };
-    // 	});
-
-    // 	navigator.permissions.query({name:'midi', sysex:true}).then(function(p) {
-    // 	    updatePermission('midi-sysex', p.status);
-    // 	    p.onchange = function() {
-    // 		updatePermission('midi-sysex', this.status);
-    // 		HoxtonOwl.midiClient.initialiseMidi(onMidiInitialised);
-    // 	    };
-    // 	});
-    // }
-
     $("#patchupload").on('change', function(evt) {
 	sendProgram(evt);
-    });
-
-    $("#connect").on('click', function() {
-    	console.log("connect");
-	// HoxtonOwl.midiClient.initialiseMidi(onMidiInitialised);
-    });
-
-    $("#monitor").on('click', function() {
-	doStatusRequestLoop = !doStatusRequestLoop;
-	if(doStatusRequestLoop)
-	    statusRequestLoop();
-	console.log("monitor "+doStatusRequestLoop);
     });
 
     $('#clear').on('click', function() {
@@ -103,5 +74,6 @@ $(document).ready(function() {
 	// });
     };
 
-    HoxtonOwl.midiClient.initialiseMidi(onMidiInitialised);
+    connectToOwl();
+
 });
