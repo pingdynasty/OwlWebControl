@@ -47,11 +47,11 @@ function systemExclusive(data) {
 	    // log("preset "+idx+": "+name);
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PARAMETER_NAME_COMMAND:
-            var parameter_map = [' ', 'a', 'b', 'c', 'd', 'e'];
             var name = getStringFromSysex(data, 5, 1);
 	    var pid = data[4]+1;
 	    console.log("parameter "+pid+" :"+name);
-	    $("#p"+pid).text(name); // update the prototype slider names
+	    if(pid >= 1 && pid <= 8)
+		$("#p"+pid).text(name); // update the prototype slider names
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_DEVICE_ID:
             var msg = getStringFromSysex(data, 4, 1);
@@ -81,24 +81,6 @@ function systemExclusive(data) {
 	}
     }
 }
-
-// function controlChange(cc, value){
-//     console.log("received CC "+cc+": "+value);
-//     switch(cc){
-//     case OpenWareMidiControl.PATCH_PARAMETER_A:
-// 	$("#p1").val(value);
-// 	break;
-//     case OpenWareMidiControl.PATCH_PARAMETER_B:
-// 	$("#p2").val(value);
-// 	break;
-//     case OpenWareMidiControl.PATCH_PARAMETER_C:
-// 	$("#p3").val(value);
-// 	break;
-//     case OpenWareMidiControl.PATCH_PARAMETER_D:
-// 	$("#p4").val(value);
-// 	break;
-//     }
-// }
 
 function programChange(pc){
     console.log("received PC "+pc);
@@ -133,7 +115,7 @@ function setParameter(pid, value){
 }
 
 function resetParameterNames(){
-    for(i=0; i<=5; ++i)
+    for(i=1; i<=8; ++i)
         $("#p"+i).text(String.fromCharCode(64+i)); // reset the prototype slider names
 }
 

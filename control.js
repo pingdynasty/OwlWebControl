@@ -24,6 +24,18 @@ function controlChange(status, cc, value){
 	$("#p5").val(value);
 	s5.set({value: value/100}, false);
 	break;
+    case OpenWareMidiControl.PATCH_PARAMETER_F:
+	$("#p6").val(value);
+	s5.set({value: value/100}, false);
+	break;
+    case OpenWareMidiControl.PATCH_PARAMETER_G:
+	$("#p7").val(value);
+	s5.set({value: value/100}, false);
+	break;
+    case OpenWareMidiControl.PATCH_PARAMETER_H:
+	$("#p8").val(value);
+	s5.set({value: value/100}, false);
+	break;
     }
 }
 
