@@ -64,9 +64,12 @@ $(document).ready(function() {
 	s6.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_F, data.value*127);});
 	s7.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_G, data.value*127);});
 	s8.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_H, data.value*127);});
-	// pb.hslider = true;
-	// pb.draw();
-	// pb.sendsTo(function(data){HoxtonOwl.midiClient.sendPb(data.value*16383);console.log(data)});
+	
+	pb.draw();
+	pb.sendsTo(function(data){HoxtonOwl.midiClient.sendPb(data.value*16383);});
+	mod.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(1, data.value*127);});
+	vol.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(7, data.value*127);});
+
 	// env.sendsTo(function(data){
 	//     console.log(data);
 	//     if(data.points.length > 1)

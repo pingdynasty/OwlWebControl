@@ -47,11 +47,25 @@
   <div>
     <canvas id="sliders1" nx="multislider"></canvas>
     <canvas id="sliders2" nx="multislider"></canvas>
-</div>
+  </div>
   <div>
     <canvas id="keyboard" nx="keyboard"></canvas>
     <!-- <canvas id="pb" nx="slider"></canvas> -->
     <!-- <canvas id="env" nx="envelope"></canvas> -->
+  </div>
+  <div>
+    <table>
+      <tr>
+	<td><canvas id="pb" nx="slider"></canvas></td>
+	<td><canvas id="mod" nx="slider"></canvas></td>
+	<td><canvas id="vol" nx="slider"></canvas></td>
+      </tr>
+      <tr>
+	<td>Pb</td>
+	<td>Mod</td>
+	<td>Vol</td>
+      </tr>
+    </table>
   </div>
   <!-- <div> -->
   <!--   <canvas id="rc" nx="toggle"></canvas> -->
@@ -67,6 +81,9 @@
     <p id="deviceid"></p>
     <p>Poll 
       <input id="poll" type="checkbox" checked="true" onclick="setMonitor(this.checked); return true;"/>
+    </p>
+    <p>Remote
+      <input type="checkbox" checked="false" onclick="HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_CONTROL, this.checked?127 : 0); return true;"/>
     </p>
   </div>
 
