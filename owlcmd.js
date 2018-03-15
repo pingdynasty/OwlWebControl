@@ -22,10 +22,6 @@ function getStringFromSysex(data, startOffset, endOffset){
   return str;
 }
 
-function sendCommand(cmd){
-    sendSysexCommand(cmd);
-}
-
 function registerPatch(idx, name){
     $('#patchnames').append($("<option>").attr('value',idx).text(name));
 }
@@ -102,12 +98,12 @@ function sendStatusRequest(){
     sendRequest(OpenWareMidiControl.PATCH_PARAMETER_A); // request parameter values
 }
 
-var doStatusRequestLoop = true;
-function statusRequestLoop() {
-    sendStatusRequest();
-    if(doStatusRequestLoop)
-	setTimeout(statusRequestLoop, 2000);
-}
+// var doStatusRequestLoop = true;
+// function statusRequestLoop() {
+//     sendStatusRequest();
+//     if(doStatusRequestLoop)
+// 	setTimeout(statusRequestLoop, 2000);
+// }
 
 function setParameter(pid, value){
     console.log("parameter "+pid+": "+value);

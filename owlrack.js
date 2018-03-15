@@ -27,7 +27,7 @@ function updateSelect(owl, value){
 function controlChange(status, cc, value){
     var ch = parseInt(status)&0x0f;
     cc = parseInt(cc);
-    // console.log("received CC "+ch+":"+cc+":"+value);
+    console.log("received CC "+ch+":"+cc+":"+value);
     if(ch == 0 && cc == OpenWareMidiControl.PATCH_PARAMETER_A)
     	updateSelect(1, value);
     else if(ch == 0 && cc == OpenWareMidiControl.PATCH_PARAMETER_B)

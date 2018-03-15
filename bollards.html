@@ -13,8 +13,9 @@
 </head>
 <body>
   <h2><span id="firmwareversion">Theremin Bollards Control Panel</span></h2>
-  <div><button id="connect">Connect</button>
-    <span id="ourstatus">Not Connected</span>
+  <div>
+    <p><button id="connect">Connect</button><span id="ourstatus">Not Connected</span></p>
+    <p>Poll <input id="poll" type="checkbox" checked="true" onclick="setMonitor(this.checked); return true;"/></p>
   </div>
 
   <div>
@@ -32,21 +33,32 @@
 	  <option value="95">9</option>
 	  <option value="105">10</option>
 	  <option value="116">Bypass</option>
-	  <!-- <option value="127">Manual</option> -->
+	  <option value="127">Manual</option>
 	</select> Preset</li>
       <li><input id="o2s34" type="range" value="121" min="48" max="127" 
 		 oninput="o2s34o.value = o2s34.value-121"
-		 onchange="HoxtonOwl.midiClient.sendChCc(2, 34, this.value)" />
-	<output name="ageOutputName" id="o2s34o">0</output>dB Output Gain Left</li>	
-      <li><input id="o2s35" type="range" value="109" min="48" max="127" 
-		 oninput="o2s35o.value = o2s35.value-121"
-		 onchange="HoxtonOwl.midiClient.sendChCc(2, 35, this.value)" />
-	<output name="ageOutputName" id="o2s35o">-12</output>dB Output Gain Right</li>
+		 onchange="HoxtonOwl.midiClient.sendChCc(3, 7, this.value)" />
+	<output name="ageOutputName" id="o2s34o">0</output>dB Output Gain</li>	
+      <!-- <li><input id="o2s34" type="range" value="121" min="48" max="127"  -->
+      <!-- 		 oninput="o2s34o.value = o2s34.value-121" -->
+      <!-- 		 onchange="HoxtonOwl.midiClient.sendChCc(2, 34, this.value)" /> -->
+      <!-- 	<output name="ageOutputName" id="o2s34o">0</output>dB Output Gain Left</li>	 -->
+      <!-- <li><input id="o2s35" type="range" value="109" min="48" max="127"  -->
+      <!-- 		 oninput="o2s35o.value = o2s35.value-121" -->
+      <!-- 		 onchange="HoxtonOwl.midiClient.sendChCc(2, 35, this.value)" /> -->
+      <!-- 	<output name="ageOutputName" id="o2s35o">-12</output>dB Output Gain Right</li> -->
       <!-- <li><input id="o2s34" type="range" value="121" min="0" max="127" onchange="HoxtonOwl.midiClient.sendChCc(2, 34, this.value)"/> Output Gain Left</li> -->
       <!-- <li><input id="o2s35" type="range" value="109" min="0" max="127" onchange="HoxtonOwl.midiClient.sendChCc(2, 35, this.value)"/> Output Gain Right</li> -->
     </ul>
     <p><button onclick="changePreset(1, 116); p1.value=116;"> Bypass</button></p>
-  </div>
+
+
+    <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_RESET);"> Reset Settings</button></p>
+
+    <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE);"> Store Settings</button></p>
+
+    <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);"> Erase Flash</button></p>
+</div>
 
   <div>
     <h3>Theremin B</h3>
@@ -63,17 +75,17 @@
 	  <option value="95">9</option>
 	  <option value="105">10</option>
 	  <option value="116">Bypass</option>
-	  <!-- <option value="127">Manual</option> -->
+	  <option value="127">Manual</option>
 	</select> Preset</li>
       <li><input id="o4s34" type="range" value="121" min="48" max="127" 
 		 oninput="o4s34o.value = o4s34.value-121"
-		 onchange="HoxtonOwl.midiClient.sendChCc(4, 34, this.value)" />
-	<output name="ageOutputName" id="o4s34o">0</output>dB Output Gain Left</li>
+		 onchange="HoxtonOwl.midiClient.sendChCc(5, 7, this.value)" />
+	<output name="ageOutputName" id="o4s34o">0</output>dB Output Gain</li>
 
-      <li><input id="o4s35" type="range" value="109" min="48" max="127" 
-		 oninput="o4s35o.value = o4s35.value-121"
-		 onchange="HoxtonOwl.midiClient.sendChCc(4, 35, this.value)" />
-	<output name="ageOutputName" id="o4s35o">-12</output>dB Output Gain Right</li>
+      <!-- <li><input id="o4s35" type="range" value="109" min="48" max="127"  -->
+      <!-- 		 oninput="o4s35o.value = o4s35.value-121" -->
+      <!-- 		 onchange="HoxtonOwl.midiClient.sendChCc(4, 35, this.value)" /> -->
+      <!-- 	<output name="ageOutputName" id="o4s35o">-12</output>dB Output Gain Right</li> -->
     </ul>
     <p><button onclick="changePreset(2, 116); p2.value=116"> Bypass</button></p>
   </div>

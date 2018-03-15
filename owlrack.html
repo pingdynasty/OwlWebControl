@@ -74,10 +74,10 @@
 
   <div>OWL 2
     <ul>
-      <li>Effect <input id="o2s56" type="range" value="0" min="0" max="127" onchange="sendParameter(2, 56, this.value)"/></li>
-      <li>Time/Coarse Pitch <input id="o2s1" type="range" value="0" min="0" max="127" onchange="sendParameter(2, 1, this.value)"/></li>
-     <li>Feedback/Fine Pitch <input id="o2s2" type="range" value="0" min="0" max="127" onchange="sendParameter(2, 2, this.value)"/></li>
-      <li>Tone/Decay <input id="o2s3" type="range" value="0" min="0" max="127" onchange="sendParameter(2, 3, this.value)"/></li>
+      <li><input id="o2s56" type="range" value="0" min="0" max="127" onchange="sendParameter(2, 56, this.value)"/> Effect</li>
+      <li><input id="o2s1" type="range" value="0" min="0" max="127" onchange="sendParameter(2, 1, this.value)"/> Time/Coarse Pitch</li>
+     <li><input id="o2s2" type="range" value="0" min="0" max="127" onchange="sendParameter(2, 2, this.value)"/> Feedback/Fine Pitch</li>
+      <li><input id="o2s3" type="range" value="0" min="0" max="127" onchange="sendParameter(2, 3, this.value)"/> Tone/Decay</li>
       <li><input id="o2s4" type="range" value="0" min="0" max="127" onchange="sendParameter(2, 4, this.value)"/> Dry/Wet</li>
       <li><input id="o2s34" type="range" value="121" min="0" max="127" onchange="HoxtonOwl.midiClient.sendChCc(2, 34, this.value)"/> Output Gain Left</li>
       <li><input id="o2s35" type="range" value="109" min="0" max="127" onchange="HoxtonOwl.midiClient.sendChCc(2, 35, this.value)"/> Output Gain Right</li>
