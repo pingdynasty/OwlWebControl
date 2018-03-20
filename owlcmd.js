@@ -149,10 +149,7 @@ function onMidiInitialised(){
         $('#load-owl-button').show();
 	sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION);
 	sendLoadRequest(); // load patches
-	// sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_ID);
-	// sendRequest(127);
-	// statusRequestLoop();
-	setMonitor(true);
+	// setMonitor(true);
     } else {
         console.log('failed to connect to an OWL');
         $('#ourstatus').text('Failed to connect')
