@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <title>Theremin Bollards</title>
   <script src="jquery.min.js"></script>
-  <script src="WebMIDIAPI.js"></script>
+  <!-- <script src="WebMIDIAPI.js"></script> -->
   <script src="midiclient.js"></script>
   <script src="OpenWareMidiControl.js"></script>
   <script src="owlcmd.js"></script>
@@ -14,7 +14,7 @@
 <body>
   <h2><span id="firmwareversion">Theremin Bollards Control Panel</span></h2>
   <div>
-    <p><button id="connect">Connect</button><span id="ourstatus">Not Connected</span></p>
+    <p><button id="connect">Connect</button> <span id="ourstatus">Not Connected</span></p>
     <p>Poll <input id="poll" type="checkbox" checked="true" onclick="setMonitor(this.checked); return true;"/></p>
   </div>
 
@@ -35,29 +35,25 @@
 	  <option value="116">Bypass</option>
 	  <option value="127">Manual</option>
 	</select> Preset</li>
-      <li><input id="o2s34" type="range" value="121" min="48" max="127" 
-		 oninput="o2s34o.value = o2s34.value-121"
-		 onchange="HoxtonOwl.midiClient.sendChCc(3, 7, this.value)" />
-	<output name="ageOutputName" id="o2s34o">0</output>dB Output Gain</li>	
-      <!-- <li><input id="o2s34" type="range" value="121" min="48" max="127"  -->
-      <!-- 		 oninput="o2s34o.value = o2s34.value-121" -->
-      <!-- 		 onchange="HoxtonOwl.midiClient.sendChCc(2, 34, this.value)" /> -->
-      <!-- 	<output name="ageOutputName" id="o2s34o">0</output>dB Output Gain Left</li>	 -->
-      <!-- <li><input id="o2s35" type="range" value="109" min="48" max="127"  -->
-      <!-- 		 oninput="o2s35o.value = o2s35.value-121" -->
-      <!-- 		 onchange="HoxtonOwl.midiClient.sendChCc(2, 35, this.value)" /> -->
-      <!-- 	<output name="ageOutputName" id="o2s35o">-12</output>dB Output Gain Right</li> -->
-      <!-- <li><input id="o2s34" type="range" value="121" min="0" max="127" onchange="HoxtonOwl.midiClient.sendChCc(2, 34, this.value)"/> Output Gain Left</li> -->
-      <!-- <li><input id="o2s35" type="range" value="109" min="0" max="127" onchange="HoxtonOwl.midiClient.sendChCc(2, 35, this.value)"/> Output Gain Right</li> -->
+      <!--
+      <li><input id="o2s36" type="range" value="121" min="48" max="127" 
+		 oninput="o2s36o.value = o2s36.value-121"
+		 onchange="HoxtonOwl.midiClient.sendChCc(2, 7, this.value)" />
+	<output name="ageOutputName" id="o2s36o">0</output>dB Output Gain</li>	
+      <li><input id="o2s34" type="range" value="121" min="48" max="127"
+      		 oninput="o2s34o.value = o2s34.value-121"
+      		 onchange="HoxtonOwl.midiClient.sendChCc(2, 34, this.value)" />
+      	<output name="ageOutputName" id="o2s34o">0</output>dB Output Gain Left</li>
+      <li><input id="o2s35" type="range" value="109" min="48" max="127"
+      		 oninput="o2s35o.value = o2s35.value-121"
+      		 onchange="HoxtonOwl.midiClient.sendChCc(2, 35, this.value)" />
+      	<output name="ageOutputName" id="o2s35o">-12</output>dB Output Gain Right</li>
+      <li><input id="o2s34" type="range" value="121" min="0" max="127" onchange="HoxtonOwl.midiClient.sendChCc(2, 34, this.value)"/> Output Gain Left</li>
+      <li><input id="o2s35" type="range" value="109" min="0" max="127" onchange="HoxtonOwl.midiClient.sendChCc(2, 35, this.value)"/> Output Gain Right</li>
+-->
     </ul>
     <p><button onclick="changePreset(1, 116); p1.value=116;"> Bypass</button></p>
 
-
-    <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_RESET);"> Reset Settings</button></p>
-
-    <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE);"> Store Settings</button></p>
-
-    <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);"> Erase Flash</button></p>
 </div>
 
   <div>
@@ -90,5 +86,37 @@
     <p><button onclick="changePreset(2, 116); p2.value=116"> Bypass</button></p>
   </div>
 
+  <div>
+    <p><button onclick="changePreset(1, 127); p1.value=127;"> Manual</button></p>
+
+    <div>OWL 1
+      <ul>
+	<li><input id="o1s56" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_AA, this.value)"/> Scale</li>
+	<li><input id="o1s1" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_A, this.value)"/> Oscillator Type</li>
+	<li><input id="o1s2" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_B, this.value)"/> Wave</li>
+	<li><input id="o1s3" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_C, this.value)"/> Arp Rate</li>
+	<li><input id="o1s4" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_D, this.value)"/> Portamento</li>
+      </ul>
+    </div>
+
+    <div>OWL 2
+      <ul>
+	<li><input id="o2s56" type="range" value="0" min="0" max="127" onchange="sendParameter(2, OpenWareMidiControl.PATCH_PARAMETER_AA, this.value)"/> Drone Box / Dub Delay </li>
+	<li><input id="o2s1" type="range" value="0" min="0" max="127" onchange="sendParameter(2, OpenWareMidiControl.PATCH_PARAMETER_A, this.value)"/> Time/Coarse Pitch</li>
+	<li><input id="o2s2" type="range" value="0" min="0" max="127" onchange="sendParameter(2, OpenWareMidiControl.PATCH_PARAMETER_B, this.value)"/> Feedback/Fine Pitch</li>
+	<li><input id="o2s3" type="range" value="0" min="0" max="127" onchange="sendParameter(2, OpenWareMidiControl.PATCH_PARAMETER_C, this.value)"/> Tone/Decay</li>
+	<li><input id="o2s4" type="range" value="0" min="0" max="127" onchange="sendParameter(2, OpenWareMidiControl.PATCH_PARAMETER_D, this.value)"/> Dry/Wet</li>
+      </ul>
+    </div>
+  </div>
+
+  <!--
+  -->
+      <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_RESET);"> Reset Settings</button></p>
+
+    <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE);"> Store Settings</button></p>
+
+  <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);"> Erase Flash</button></p>
+    
 </body>
 </html>

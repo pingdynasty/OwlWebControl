@@ -2,10 +2,10 @@ function isManualControl(owl){
     return true;
 }
 
-function sendParameter(owl, slider, value){
-    // console.log("parameter "+slider+" : "+value);
+function sendParameter(owl, pid, value){
+    // console.log("parameter "+pid+" : "+value);
     if(isManualControl(owl))
-	HoxtonOwl.midiClient.sendChCc(owl, OpenWareMidiControl.PATCH_PARAMETER_A+slider-1, value);
+	HoxtonOwl.midiClient.sendChCc(owl, pid, value);
 }
 
 function updateSlider(owl, slider, value){

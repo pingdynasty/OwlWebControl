@@ -27,7 +27,7 @@ HoxtonOwl.midiClient = {
     logMidiData: function(data){
       var arr = [];
       for(var i=0; i<data.length; i++) arr.push((data[i]<16 ? '0' : '') + data[i].toString(16));
-      // console.log('MIDI:', arr.join(' '));
+      console.log('MIDI:', arr.join(' '));
     },
 
     onMIDIInit: function(midi, options) {
@@ -183,14 +183,15 @@ HoxtonOwl.midiClient = {
         var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_DEVICE, cmd, 0xf7 ];
         this.logMidiData(msg);
         if(this.midiOutput)
-          this.midiOutput.send(msg, 0);
+            this.midiOutput.send(msg, 0);
     },
 
     sendSysexData: function(cmd, data) {
         console.log("sending sysex data");
         var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_DEVICE, cmd ];
         for(var i=0; i<data.length; ++i)
-    	msg.push(data.charCodeAt(i));
+    	    msg.push(data[i]);
+    	    // msg.push(data.charCodeAt(i));
         // msg.push.apply(msg, data);
         msg.push(0xf7);
         this.logMidiData(msg);
