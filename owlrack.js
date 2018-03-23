@@ -8,12 +8,13 @@ function sendParameter(owl, pid, value){
 	HoxtonOwl.midiClient.sendChCc(owl, pid, value);
 }
 
-function updateSlider(owl, slider, value){
-    var sid = "#o"+owl+"s"+slider;
-    // console.log("slider "+sid+" : "+value);
+function updateSlider(ch, cc, value){
+    var sid = "#o"+ch+"s"+cc;
+    console.log("slider "+sid+" : "+value);
     // if(!isManualControl(owl)){
-	// $(sid).val(value);
-    // }
+    if($(sid)){
+	$(sid).val(value);
+    }
 }
 
 function updateSelect(owl, value){
@@ -37,11 +38,11 @@ function controlChange(status, cc, value){
     	    updateSelect(1, value);
     // 	else if(ch == 3)
     // 	    updateSelect(2, value);
-    // }else if(cc == OpenWareMidiControl.PATCH_PARAMETER_F && ch == 1){
-    // 	updateSelect(2, value);
+    }else if(cc == OpenWareMidiControl.PATCH_PARAMETER_F && ch == 1){
+    	updateSelect(2, value);
     } else 
     if(ch >= 1 && ch <= 4)
-	updateSlider(ch, 1+cc-OpenWareMidiControl.PATCH_PARAMETER_A, value);
+	updateSlider(ch, cc, value);
 }
 
 function changePreset(ab, value){

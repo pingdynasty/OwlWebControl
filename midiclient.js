@@ -186,6 +186,28 @@ HoxtonOwl.midiClient = {
             this.midiOutput.send(msg, 0);
     },
 
+    sendSysexText: function(cmd, data) {
+        console.log("sending sysex text");
+        var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_OMNI_DEVICE, cmd ];
+        for(var i=0; i<data.length; ++i)
+    	    msg.push(data.charCodeAt(i));
+        msg.push(0xf7);
+        this.logMidiData(msg);
+        if(this.midiOutput)
+          this.midiOutput.send(msg, 0);
+    },
+
+    sendSysexIdText: function(id, cmd, data) {
+        console.log("sending sysex text");
+        var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_OWL_DEVICE | id, cmd ];
+        for(var i=0; i<data.length; ++i)
+    	    msg.push(data.charCodeAt(i));
+        msg.push(0xf7);
+        this.logMidiData(msg);
+        if(this.midiOutput)
+          this.midiOutput.send(msg, 0);
+    },
+
     sendSysexData: function(cmd, data) {
         console.log("sending sysex data");
         var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_DEVICE, cmd ];

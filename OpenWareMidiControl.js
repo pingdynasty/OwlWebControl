@@ -1,5 +1,7 @@
 var MIDI_SYSEX_MANUFACTURER        = 0x7d;     /* Educational or development use only */
-var MIDI_SYSEX_DEVICE              = 0x52;     /* OWL Open Ware Laboratory */
+var MIDI_SYSEX_OMNI_DEVICE             = 0x52;     /* OWL Open Ware Laboratory */
+var MIDI_SYSEX_DEVICE             = 0x52;     /* OWL Open Ware Laboratory */
+var MIDI_SYSEX_OWL_DEVICE              = 0x20;     /* OWL Open Ware Laboratory */
 
 var SYSEX_CONFIGURATION_AUDIO_RATE           = "FS"
 var SYSEX_CONFIGURATION_AUDIO_WIDTH          = "WH"
