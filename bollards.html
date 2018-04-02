@@ -23,7 +23,7 @@
     <!-- <ul> -->
     <!--   <li> -->
     <p>
-	<select id="p1" onchange="HoxtonOwl.midiClient.sendChCc(0, OpenWareMidiControl.PATCH_PARAMETER_A, this.value/5 + 1)" style="width: 80px;">
+	<select id="p1" onchange="HoxtonOwl.midiClient.sendChCc(0, OpenWareMidiControl.PATCH_PARAMETER_A, Math.floor(this.value/5))" style="width: 80px;">
 	  <option value="10">1</option>
 	  <option value="21">2</option>
 	  <option value="31">3</option>
@@ -40,18 +40,16 @@
   <!-- </li> -->
   <!-- <li> -->
   <p>
-    <select id="p2" onchange="HoxtonOwl.midiClient.sendChCc(0, OpenWareMidiControl.PATCH_PARAMETER_B, this.value/5 + 1)" style="width: 80px;">
-	  <option value="10">1</option>
-	  <option value="21">2</option>
-	  <option value="37">3</option>
-	  <option value="42">4</option>
-	  <option value="52">5</option>
+    <select id="p2" onchange="HoxtonOwl.midiClient.sendChCc(0, OpenWareMidiControl.PATCH_PARAMETER_B, Math.floor(this.value/5))" style="width: 80px;">
+	  <option value="0">1</option>
+	  <option value="25">2</option>
+	  <option value="50">3</option>
+	  <option value="76">4</option>
+	  <option value="101">5</option>
     </select> Octave
     </p>
-  <!-- </li> -->
-  <!--   </ul> -->
-    <!-- <p><button onclick="HoxtonOwl.midiClient.sendChCc(0, OpenWareMidiControl.PATCH_PARAMETER_A, 116); p1.value=116;"> Bypass</button></p> -->
-    <!-- <p><button onclick="HoxtonOwl.midiClient.sendChCc(0, OpenWareMidiControl.PATCH_PARAMETER_A, 127); p1.value=127;"> Manual</button></p> -->
+    <p><button onclick="HoxtonOwl.midiClient.sendChCc(0, OpenWareMidiControl.PATCH_PARAMETER_A, Math.floor(116/5)); p1.value=116;"> Bypass</button></p>
+    <p><button onclick="HoxtonOwl.midiClient.sendChCc(0, OpenWareMidiControl.PATCH_PARAMETER_A, Math.floor(127/5)); p1.value=127;"> Manual</button></p>
     
   </div>
 
@@ -63,6 +61,7 @@
       <li><input id="o1s21" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_B, this.value)"/> Wave</li>
       <li><input id="o1s22" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_C, this.value)"/> Gain</li>
       <li><input id="o1s23" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_D, this.value)"/> Portamento</li>
+      <li><input id="o1s1" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_F, this.value)"/> Octave</li>
     </ul>
     <p>Device Settings</p>
     <ul>
@@ -76,11 +75,11 @@
   <div>OWL 2
     <p>Patch Parameters</p>
     <ul>
-      <li><input id="o2s75" type="range" value="0" min="0" max="127" onchange="sendParameter(2, OpenWareMidiControl.PATCH_PARAMETER_AA, this.value)"/> Drone Box / Dub Delay </li>
-      <li><input id="o2s20" type="range" value="0" min="0" max="127" onchange="sendParameter(2, OpenWareMidiControl.PATCH_PARAMETER_A, this.value)"/> Time/Coarse Pitch</li>
-      <li><input id="o2s21" type="range" value="0" min="0" max="127" onchange="sendParameter(2, OpenWareMidiControl.PATCH_PARAMETER_B, this.value)"/> Feedback/Fine Pitch</li>
-      <li><input id="o2s22" type="range" value="0" min="0" max="127" onchange="sendParameter(2, OpenWareMidiControl.PATCH_PARAMETER_C, this.value)"/> Tone/Decay</li>
-      <li><input id="o2s23" type="range" value="0" min="0" max="127" onchange="sendParameter(2, OpenWareMidiControl.PATCH_PARAMETER_D, this.value)"/> Dry/Wet</li>
+      <li><input id="o2s75" type="range" value="0" min="0" max="127" onchange="sendParameter(2, OpenWareMidiControl.PATCH_PARAMETER_AA, this.value)"/> DroneBox / Dub Delay / Phaser </li>
+      <li><input id="o2s20" type="range" value="0" min="0" max="127" onchange="sendParameter(2, OpenWareMidiControl.PATCH_PARAMETER_A, this.value)"/> Coarse Pitch / Time / Rate</li>
+      <li><input id="o2s21" type="range" value="0" min="0" max="127" onchange="sendParameter(2, OpenWareMidiControl.PATCH_PARAMETER_B, this.value)"/> Fine Pitch / Feedback / Depth</li>
+      <li><input id="o2s22" type="range" value="0" min="0" max="127" onchange="sendParameter(2, OpenWareMidiControl.PATCH_PARAMETER_C, this.value)"/> Decay / Tone / Feedback</li>
+      <li><input id="o2s23" type="range" value="0" min="0" max="127" onchange="sendParameter(2, OpenWareMidiControl.PATCH_PARAMETER_D, this.value)"/> Mix / Mix / --</li>
 
     </ul>
     <p>Device Settings</p>
@@ -98,6 +97,7 @@
       <li><input id="o3s21" type="range" value="0" min="0" max="127" onchange="sendParameter(3, OpenWareMidiControl.PATCH_PARAMETER_B, this.value)"/> Wave</li>
       <li><input id="o3s22" type="range" value="0" min="0" max="127" onchange="sendParameter(3, OpenWareMidiControl.PATCH_PARAMETER_C, this.value)"/> Gain</li>
       <li><input id="o3s23" type="range" value="0" min="0" max="127" onchange="sendParameter(3, OpenWareMidiControl.PATCH_PARAMETER_D, this.value)"/> Portamento</li>
+      <li><input id="o3s1" type="range" value="0" min="0" max="127" onchange="sendParameter(3, OpenWareMidiControl.PATCH_PARAMETER_F, this.value)"/> Octave</li>
     <p>Device Settings</p>
     <ul>
     <li><input type="range" value="13" min="0" max="19" onchange="HoxtonOwl.midiClient.sendSysexIdText(3, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'IG'+this.value); $('#ig3').text((this.value));"/><span id="ig3"></span> Input Gain</li>
@@ -109,11 +109,11 @@
   <div>OWL 4
     <p>Patch Parameters</p>
     <ul>
-      <li><input id="o4s56" type="range" value="0" min="0" max="127" onchange="sendParameter(4, OpenWareMidiControl.PATCH_PARAMETER_AA, this.value)"/> Drone Box / Dub Delay </li>
-      <li><input id="o4s20" type="range" value="0" min="0" max="127" onchange="sendParameter(4, OpenWareMidiControl.PATCH_PARAMETER_A, this.value)"/> Time/Coarse Pitch</li>
-      <li><input id="o4s21" type="range" value="0" min="0" max="127" onchange="sendParameter(4, OpenWareMidiControl.PATCH_PARAMETER_B, this.value)"/> Feedback/Fine Pitch</li>
-      <li><input id="o4s22" type="range" value="0" min="0" max="127" onchange="sendParameter(4, OpenWareMidiControl.PATCH_PARAMETER_C, this.value)"/> Tone/Decay</li>
-      <li><input id="o4s23" type="range" value="0" min="0" max="127" onchange="sendParameter(4, OpenWareMidiControl.PATCH_PARAMETER_D, this.value)"/> Dry/Wet</li>
+      <li><input id="o4s56" type="range" value="0" min="0" max="127" onchange="sendParameter(4, OpenWareMidiControl.PATCH_PARAMETER_AA, this.value)"/> DroneBox / Dub Delay / Phaser </li>
+      <li><input id="o4s20" type="range" value="0" min="0" max="127" onchange="sendParameter(4, OpenWareMidiControl.PATCH_PARAMETER_A, this.value)"/> Coarse Pitch / Time / Rate</li>
+      <li><input id="o4s21" type="range" value="0" min="0" max="127" onchange="sendParameter(4, OpenWareMidiControl.PATCH_PARAMETER_B, this.value)"/> Fine Pitch / Feedback / Depth</li>
+      <li><input id="o4s22" type="range" value="0" min="0" max="127" onchange="sendParameter(4, OpenWareMidiControl.PATCH_PARAMETER_C, this.value)"/> Decay / Tone / Feedback</li>
+      <li><input id="o4s23" type="range" value="0" min="0" max="127" onchange="sendParameter(4, OpenWareMidiControl.PATCH_PARAMETER_D, this.value)"/> Mix / Mix / --</li>
 </ul>
     <p>Device Settings</p>
     <ul>

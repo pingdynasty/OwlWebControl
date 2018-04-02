@@ -21,8 +21,8 @@ function updateSelect(owl, value){
     console.log("select "+owl+" : "+value);
     if(owl == 1)
 	$("#p1").val(value);
-    // else
-    // 	$("#p2").val(value/2);
+    else
+    	$("#p2").val(value);
 }
 
 function controlChange(status, cc, value){
