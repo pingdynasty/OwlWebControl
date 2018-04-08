@@ -67,8 +67,8 @@
     <ul>
     <li><input type="range" value="13" min="0" max="19" onchange="HoxtonOwl.midiClient.sendSysexIdText(1, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'IG'+this.value); $('#ig1').text((this.value));"/><span id="ig1"></span> Input Gain</li>
     <li><input type="range" value="60" min="0" max="79" onchange="HoxtonOwl.midiClient.sendSysexIdText(1, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'OG'+this.value);$('#og1').text(this.value);"/><span id="og1"></span> Output Gain</li>
-  <!-- <li><button onclick="HoxtonOwl.midiClient.sendSysexIdCommand(1, OpenWareMidiSysexCommand.SYSEX_SETTINGS_RESET);"> Reset Settings</button></li> -->
-  <!--   <li><button onclick="HoxtonOwl.midiClient.sendSysexIdCommand(1, OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE);"> Store Settings</button></li> -->
+    <!-- <li><button onclick="HoxtonOwl.midiClient.sendSysexIdCommand(1, OpenWareMidiSysexCommand.SYSEX_SETTINGS_RESET);"> Reset Settings</button></li> -->
+    <li><button onclick="HoxtonOwl.midiClient.sendSysexIdCommand(1, OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE);"> Store Settings</button></li>
     </ul>
   </div>
 
@@ -86,6 +86,7 @@
     <ul>
     <li><input type="range" value="13" min="0" max="19" onchange="HoxtonOwl.midiClient.sendSysexIdText(2, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'IG'+this.value); $('#ig2').text((this.value));"/><span id="ig2"></span> Input Gain</li>
     <li><input type="range" value="60" min="0" max="79" onchange="HoxtonOwl.midiClient.sendSysexIdText(2, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'OG'+this.value);$('#og2').text(this.value);"/><span id="og2"></span> Output Gain</li>
+    <li><button onclick="HoxtonOwl.midiClient.sendSysexIdCommand(2, OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE);"> Store Settings</button></li>
     </ul>
   </div>
 
@@ -102,6 +103,7 @@
     <ul>
     <li><input type="range" value="13" min="0" max="19" onchange="HoxtonOwl.midiClient.sendSysexIdText(3, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'IG'+this.value); $('#ig3').text((this.value));"/><span id="ig3"></span> Input Gain</li>
     <li><input type="range" value="60" min="0" max="79" onchange="HoxtonOwl.midiClient.sendSysexIdText(3, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'OG'+this.value);$('#og3').text(this.value);"/><span id="og3"></span> Output Gain</li>
+    <li><button onclick="HoxtonOwl.midiClient.sendSysexIdCommand(3, OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE);"> Store Settings</button></li>
     </ul>
 </ul>
   </div>
@@ -119,6 +121,7 @@
     <ul>
     <li><input type="range" value="13" min="0" max="19" onchange="HoxtonOwl.midiClient.sendSysexIdText(4, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'IG'+this.value); $('#ig4').text((this.value));"/><span id="ig4"></span> Input Gain</li>
     <li><input type="range" value="60" min="0" max="79" onchange="HoxtonOwl.midiClient.sendSysexIdText(4, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'OG'+this.value);$('#og4').text(this.value);"/><span id="og4"></span> Output Gain</li>
+    <li><button onclick="HoxtonOwl.midiClient.sendSysexIdCommand(4, OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE);"> Store Settings</button></li>
     </ul>
 </ul>
   </div>
