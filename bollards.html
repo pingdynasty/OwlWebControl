@@ -56,17 +56,17 @@
   <div>OWL 1
     <p>Patch Parameters</p>
     <ul>
-      <li><input id="o1s75" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_AA, this.value)"/> Scale</li>
-      <li><input id="o1s20" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_A, this.value)"/> Oscillator Type</li>
-      <li><input id="o1s21" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_B, this.value)"/> Wave</li>
-      <li><input id="o1s22" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_C, this.value)"/> Gain</li>
-      <li><input id="o1s23" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_D, this.value)"/> Portamento</li>
-      <li><input id="o1s1" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_F, this.value)"/> Octave</li>
+      <li><input id="o1s75" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_AA, this.value); o1o75.value = Math.round(this.value/16)"/> <output id="o1o75"></output> Scale</li>
+      <li><input id="o1s20" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_A, this.value); o1o20.value = this.value/127.0;"/> Oscillator Type <output id="o1o20"></output></li>
+      <li><input id="o1s21" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_B, this.value); o1o21.value = this.value/127.0"/> Wave <output id="o1o21"></output></li>
+      <li><input id="o1s22" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_C, this.value); o1o22.value = this.value/127.0"/> Gain <output id="o1o22"></output></li>
+      <li><input id="o1s23" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_D, this.value); o1o23.value = this.value/127.0"/> Portamento <output id="o1o23"></output></li>
+      <li><input id="o1s1" type="range" value="0" min="0" max="127" onchange="sendParameter(1, OpenWareMidiControl.PATCH_PARAMETER_F, this.value); o1o24.value = this.value/127.0"/> Octave <output id="o1o24"></output></li>
     </ul>
     <p>Device Settings</p>
     <ul>
-    <li><input type="range" value="13" min="0" max="19" onchange="HoxtonOwl.midiClient.sendSysexIdText(1, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'IG'+this.value); $('#ig1').text((this.value));"/><span id="ig1"></span> Input Gain</li>
-    <li><input type="range" value="60" min="0" max="79" onchange="HoxtonOwl.midiClient.sendSysexIdText(1, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'OG'+this.value);$('#og1').text(this.value);"/><span id="og1"></span> Output Gain</li>
+    <li><input type="range" value="13" min="0" max="127" onchange="HoxtonOwl.midiClient.sendSysexIdText(1, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'IG'+this.value); $('#ig1').text((this.value));"/><span id="ig1"></span> Input Gain</li>
+    <li><input type="range" value="60" min="0" max="127" onchange="HoxtonOwl.midiClient.sendSysexIdText(1, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'OG'+this.value);$('#og1').text(this.value);"/><span id="og1"></span> Output Gain</li>
   <!-- <li><button onclick="HoxtonOwl.midiClient.sendSysexIdCommand(1, OpenWareMidiSysexCommand.SYSEX_SETTINGS_RESET);"> Reset Settings</button></li> -->
   <!--   <li><button onclick="HoxtonOwl.midiClient.sendSysexIdCommand(1, OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE);"> Store Settings</button></li> -->
     </ul>
@@ -84,8 +84,8 @@
     </ul>
     <p>Device Settings</p>
     <ul>
-    <li><input type="range" value="13" min="0" max="19" onchange="HoxtonOwl.midiClient.sendSysexIdText(2, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'IG'+this.value); $('#ig2').text((this.value));"/><span id="ig2"></span> Input Gain</li>
-    <li><input type="range" value="60" min="0" max="79" onchange="HoxtonOwl.midiClient.sendSysexIdText(2, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'OG'+this.value);$('#og2').text(this.value);"/><span id="og2"></span> Output Gain</li>
+    <li><input type="range" value="13" min="0" max="127" onchange="HoxtonOwl.midiClient.sendSysexIdText(2, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'IG'+this.value); $('#ig2').text((this.value));"/><span id="ig2"></span> Input Gain</li>
+    <li><input type="range" value="60" min="0" max="127" onchange="HoxtonOwl.midiClient.sendSysexIdText(2, OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'OG'+this.value);$('#og2').text(this.value);"/><span id="og2"></span> Output Gain</li>
     </ul>
   </div>
 
@@ -128,6 +128,8 @@
 
     <!-- <input type="range" value="121" min="0" max="127" onchange="HoxtonOwl.midiClient.sendSysexText(OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, 'OG'+this.value);"/> Output Gain -->
 </p>
+
+  <p><button onclick="HoxtonOwl.midiClient.sendSysexIdCommand(3, OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);"> Erase Flash</button></p>
 
 
   <!-- sensible dB controls: -->
