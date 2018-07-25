@@ -8,24 +8,25 @@
   <script src="midiclient.js"></script>
   <script src="OpenWareMidiControl.js"></script>
   <script src="owlcmd.js"></script>
+  <script src="control.js"></script>
 </head>
 <body>
 
   <h2><span id="firmwareversion">OpenWareLaboratory</span></h2>
 
-  <p>MIDI In
-  <select id="midiInputs" onchange="openMidiInput(this.value)">
-    <option value="0xff"><i>none</i></option>
-  </select>
-  </p>
+  <!-- <p>MIDI In -->
+  <!-- <select id="midiInputs" onchange="openMidiInput(this.value)"> -->
+  <!--   <option value="0xff"><i>none</i></option> -->
+  <!-- </select> -->
+  <!-- </p> -->
 
-  <p>MIDI Out
-  <select id="midiOutputs" onchange="openMidiOutput(this.value)">
-    <option value="0xff"><i>none</i></option>
-  </select>
-  Monitor: <input id="monitor" type="button"/>
-  Connect: <input id="connect" type="button"/>
-  </p>
+  <!-- <p>MIDI Out -->
+  <!-- <select id="midiOutputs" onchange="openMidiOutput(this.value)"> -->
+  <!--   <option value="0xff"><i>none</i></option> -->
+  <!-- </select> -->
+  <!-- Monitor: <input id="monitor" type="button"/> -->
+  <!-- Connect: <input id="connect" type="button"/> -->
+  <!-- </p> -->
 
   <p>Patches
       <select id="patchnames" onchange="selectPatch(this.value)"></select>

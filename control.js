@@ -55,7 +55,8 @@ $(document).ready(function() {
 	return false;
     });
 
-    nx.onload = function(){
+    if(typeof nx !== 'undefined') {
+	nx.onload = function(){
 	s1.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_A, data.value*127);});
 	s2.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_B, data.value*127);});
 	s3.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_C, data.value*127);});
@@ -110,7 +111,7 @@ $(document).ready(function() {
 	//     HoxtonOwl.midiClient.sendNoteOn(data.x*127, data.side*60);
 	// });
     };
-
+    }
     connectToOwl();
 
 });
