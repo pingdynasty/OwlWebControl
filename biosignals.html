@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <title>OWL BioSignals</title>
+  <script src="jquery.min.js"></script>
+  <script src="midiclient.js"></script>
+  <script src="OpenWareMidiControl.js"></script>
+  <script src="owlcmd.js"></script>
+  <script src="biosignals.js"></script>
+  <script src="nexusUI.js"></script>	
+  <style>
+    td { text-align: center; }
+</style>
+</head>
+
+  <h2><span id="firmwareversion">OWL BioSignals</span></h2>
+
+  <div>
+    <h3 id="patchname"></h3>
+    <table>
+      <tr>
+	<td><canvas id="s1" nx="slider"></canvas></td>
+	<td><canvas id="s2" nx="slider"></canvas></td>
+	<td><canvas id="s3" nx="slider"></canvas></td>
+	<td><canvas id="s4" nx="slider"></canvas></td>
+	<!-- <td><canvas id="s5" nx="slider"></canvas></td> -->
+	<!-- <td><canvas id="s6" nx="slider"></canvas></td> -->
+	<!-- <td><canvas id="s7" nx="slider"></canvas></td> -->
+	<!-- <td><canvas id="s8" nx="slider"></canvas></td> -->
+	<!-- <td><canvas id="push" nx="button"></canvas></td> -->
+      </tr>
+      <tr>
+	<td id="p1">Gain</td>
+	<td id="p2">HP Fc</td>
+	<td id="p3">Notch Q</td>
+	<td id="p4">Env Alpha</td>
+	<!-- <td id="p5">E</td> -->
+	<!-- <td id="p6">F</td> -->
+	<!-- <td id="p7">G</td> -->
+	<!-- <td id="p8">H</td> -->
+	<!-- <td>Push</td> -->
+      </tr>
+    </table>
+  </div>
+  <!-- <div> -->
+  <!--   <canvas id="sliders1" nx="multislider"></canvas> -->
+  <!--   <canvas id="sliders2" nx="multislider"></canvas> -->
+  <!-- </div> -->
+  <!-- <div> -->
+  <!--   <canvas id="keyboard" nx="keyboard"></canvas> -->
+  <!-- </div> -->
+  <!-- <div> -->
+  <!--   <table> -->
+  <!--     <tr> -->
+  <!-- 	<td><canvas id="pb" nx="slider"></canvas></td> -->
+  <!-- 	<td><canvas id="mod" nx="slider"></canvas></td> -->
+  <!-- 	<td><canvas id="vol" nx="slider"></canvas></td> -->
+  <!--     </tr> -->
+  <!--     <tr> -->
+  <!-- 	<td>Pb</td> -->
+  <!-- 	<td>Mod</td> -->
+  <!-- 	<td>Vol</td> -->
+  <!--     </tr> -->
+  <!--   </table> -->
+  <!-- </div> -->
+  <!-- <div> -->
+  <!--   <canvas id="rc" nx="toggle"></canvas> -->
+  <!--   <canvas id="ghost" nx="ghost"></canvas> -->
+  <!--   <canvas id="metroball" nx="metroball"></canvas> -->
+  <!-- </div> -->
+
+  <div>
+    <h3>Status</h3>
+    <p id="ourstatus"></p>
+    <p id="patchstatus"></p>
+    <p id="patchmessage"></p>
+    <p id="deviceid"></p>
+    <p>Poll 
+      <input id="poll" type="checkbox" checked="true" onclick="setMonitor(this.checked); return true;"/>
+    </p>
+    <p>Remote
+      <input type="checkbox" checked="false" onclick="HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_CONTROL, this.checked?127 : 0); return true;"/>
+    </p>
+  </div>
+
+  <div>
+    <h3>Patches</h3>
+    <p>Presets
+      <select id="patchnames" onchange="selectPatch(this.value)"></select>
+      <!-- <select id="patchnames" onchange="selectPatch(this.value)"></select> -->
+    </p>
+    <p>Upload
+      <input id="patchupload" type="file" name="files[]" multiple="true" accept=".syx,.sysex" />
+      <output id="filenames"></output>
+    </p>
+  </div>
+
+<!--
+    Run <input type="button" onclick="sendProgramRun(); return false;"/>
+    Store 0 <input type="button" onclick="sendProgramStore(0); return false;"/>
+    Store 1 <input type="button" onclick="sendProgramStore(1); return false;"/>
+    Store 2 <input type="button" onclick="sendProgramStore(2); return false;"/>
+    Store 3 <input type="button" onclick="sendProgramStore(3); return false;"/>
+    <form onsubmit="sendFirmwareFlash(this)">
+      Checksum: <input type="text" name="crc32"/>
+      <input type="submit">Flash firmware</input>
+    </form>
+-->
+
+<!--  <div>
+    <h3>Send Patch</h3>
+    <form onsubmit="sendProgramFromUrl(this.patchurl.value); return false;">
+      url <input id="patchurl"/>
+      <input type="submit">Load patch</input>
+    </form>
+      url <input id="patchurl"/>
+    <button onclick="sendProgramFromUrl(document.getElementById('patchurl').value)">Load patch</input>
+  </div> 
+-->
+
+  <div>
+    <!-- <p> -->
+    <!--   Monitor: <input id="monitor" type="button"/> -->
+    <!--   Connect: <input id="connect" type="button"/> -->
+    <!-- </p> -->
+
+    <h3>Query</h3>
+    status <input type="button" onclick="sendStatusRequest(); return false;"/>
+    load <input type="button" onclick="sendLoadRequest(); return false;"/>
+    <!-- led <input type="button" onclick="sendRequest(OpenWareMidiControl.LED); return false;"/> -->
+    message <input type="button" onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE); return false;"/>
+    <!-- device id <input type="button" onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_ID); return false;"/> -->
+    <!-- version <input type="button" onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION); return false;"/> -->
+    <!-- settings <input type="button" onclick="sendRequest(127); return false;"/> -->
+    <!-- parameter values <input type="button" onclick="sendRequest(OpenWareMidiControl.PATCH_PARAMETER_A); return false;"/> -->
+  </div>
+
+  <div>
+    <h3>Messages</h3>
+    <button id="clear">Clear</button>
+    <ul id="log"></ul>
+  </div>
+
+<!--
+
+  <p>MIDI In
+  <select id="midiInputs" onchange="openMidiInput(this.value)">
+    <option value="0xff"><i>none</i></option>
+  </select>
+  </p>
+
+  <p>MIDI Out
+  <select id="midiOutputs" onchange="openMidiOutput(this.value)">
+    <option value="0xff"><i>none</i></option>
+  </select>
+  </p>
+-->
+
+<!--   <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);"> Erase Flash Storage</button></p> -->
+
+  
+<!-- <p><button onclick="HoxtonOwl.midiClient.sendSysexData(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE, [0, 0, 0, 0, 4]);"> Erase Sector 4</button></p> -->
+
+<p><button onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_ID);">Request Device ID</button></p>
+
+  <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_DEVICE_RESET_COMMAND);"> Device Reset</button></p>
+
+<p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_BOOTLOADER_COMMAND);"> Reset to Boot Loader</button></p>
+</body>
+</html>
