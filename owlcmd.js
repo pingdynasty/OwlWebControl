@@ -32,8 +32,8 @@ function log(msg){
 
 function systemExclusive(data) {
     if(data.length > 3 && data[0] == 0xf0
-       && data[1] == MIDI_SYSEX_MANUFACTURER
-       && data[2] == MIDI_SYSEX_DEVICE){
+       && data[1] == MIDI_SYSEX_MANUFACTURER){
+       // && data[2] == MIDI_SYSEX_DEVICE){
 	// console.log("sysex: 0x"+data[3].toString(16)+" length: "+data.length);
 	switch(data[3]){
 	case OpenWareMidiSysexCommand.SYSEX_PRESET_NAME_COMMAND:
@@ -130,14 +130,14 @@ function onMidiInitialised(){
     var outConnected = false,
         inConnected = false;
     for (var o = 0; o < HoxtonOwl.midiClient.midiOutputs.length; o++) {
-        if (HoxtonOwl.midiClient.midiOutputs[o].name.match('^OWL-MIDI')) {
+        if (HoxtonOwl.midiClient.midiOutputs[o].name.match('^OWL')) {
             HoxtonOwl.midiClient.selectMidiOutput(o);
             outConnected = true;
             break;
         }        
     }
     for (var i = 0; i < HoxtonOwl.midiClient.midiInputs.length; i++) {
-        if (HoxtonOwl.midiClient.midiInputs[i].name.match('^OWL-MIDI')) {
+        if (HoxtonOwl.midiClient.midiInputs[i].name.match('^OWL')) {
             HoxtonOwl.midiClient.selectMidiInput(i);
             inConnected = true;
             break;

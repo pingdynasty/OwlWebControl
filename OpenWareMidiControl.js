@@ -1,5 +1,6 @@
 var MIDI_SYSEX_MANUFACTURER        = 0x7d;     /* Educational or development use only */
-var MIDI_SYSEX_DEVICE              = 0x52;     /* OWL Open Ware Laboratory */
+var MIDI_SYSEX_OMNI_DEVICE         = 0x52;     /* OWL Open Ware Laboratory */
+var MIDI_SYSEX_OWL_DEVICE          = 0x20;
 
 var SYSEX_CONFIGURATION_AUDIO_RATE           = "FS"
 var SYSEX_CONFIGURATION_AUDIO_WIDTH          = "WH"
@@ -14,6 +15,7 @@ var OpenWareMidiSysexCommand = {
   SYSEX_PRESET_NAME_COMMAND       : 0x01,
   SYSEX_PARAMETER_NAME_COMMAND    : 0x02,
   SYSEX_CONFIGURATION_COMMAND     : 0x03,
+  SYSEX_DEVICE_RESET_COMMAND      : 0x7d,
   SYSEX_BOOTLOADER_COMMAND        : 0x7e,
   SYSEX_FIRMWARE_UPLOAD           : 0x10,
   SYSEX_FIRMWARE_STORE            : 0x11,

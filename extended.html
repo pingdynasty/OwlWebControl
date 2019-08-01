@@ -122,7 +122,6 @@
   </div> 
 -->
 
-<!--
   <div>
     <p>
       Monitor: <input id="monitor" type="button"/>
@@ -146,6 +145,7 @@
     <ul id="log"></ul>
   </div>
 
+<!--
 
   <p>MIDI In
   <select id="midiInputs" onchange="openMidiInput(this.value)">
@@ -159,5 +159,16 @@
   </select>
   </p>
 -->
+
+  <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);"> Erase Flash Storage</button></p>
+
+  
+<p><button onclick="HoxtonOwl.midiClient.sendSysexData(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE, [0, 0, 0, 0, 4]);"> Erase Sector 4</button></p>
+
+<p><button onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_ID);">Request Device ID</button></p>
+
+  <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_DEVICE_RESET_COMMAND);"> Device Reset</button></p>
+
+<p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_BOOTLOADER_COMMAND);"> Reset to Boot Loader</button></p>
 </body>
 </html>
