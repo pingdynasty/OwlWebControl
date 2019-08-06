@@ -110,8 +110,24 @@ $(document).ready(function() {
 	//     console.log(data);
 	//     HoxtonOwl.midiClient.sendNoteOn(data.x*127, data.side*60);
 	// });
-    };
+	};
     }
-    connectToOwl();
 
+    $('#scope').on('click', function() {
+	var context = new window.AudioContext()
+	myOscilloscope = new WavyJones(context, 'oscilloscope');
+	// get user microphone
+	var constraints = { video: false, audio: true };
+	navigator.getUserMedia(constraints, function(stream) {
+	    var source = context.createMediaStreamSource(stream);
+	    source.connect(myOscilloscope);
+	    // myOscilloscope.connect(context.destination);
+	    console.log('mic connected')
+	}, function (error) {
+	    console.error("getUserMedia error:", error);
+	});
+	context.resume();
+    });
+    
+    connectToOwl();
 });

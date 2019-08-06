@@ -10,9 +10,14 @@
   <script src="owlcmd.js"></script>
   <script src="biosignals.js"></script>
   <script src="nexusUI.js"></script>	
+  <script type="text/javascript" src="wavy-jones.js"></script>
   <style>
     td { text-align: center; }
-</style>
+    #oscilloscope {
+        width: 800px;
+        height: 200px;
+    }
+  </style>
 </head>
 
   <h2><span id="firmwareversion">OWL BioSignals</span></h2>
@@ -136,6 +141,9 @@
     <!-- settings <input type="button" onclick="sendRequest(127); return false;"/> -->
     <!-- parameter values <input type="button" onclick="sendRequest(OpenWareMidiControl.PATCH_PARAMETER_A); return false;"/> -->
   </div>
+
+  <div id="oscilloscope"></div>
+  <p><button id="scope">Scope</button></p>
 
   <div>
     <h3>Messages</h3>
