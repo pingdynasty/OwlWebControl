@@ -1,13 +1,13 @@
 
 function pitchBend(channel, value) {
     $("#pb").val(value);
-    pb.set({value: value/8192}, false);
+    // pb.set({value: (value-8192)/8192}, false);
+    pb.set({value: value/16384}, false);
 }
 
 function controlChange(status, cc, value){
     var ch = parseInt(status)&0x0f;
     cc = parseInt(cc);
-    log("received CC "+ch+":"+cc+":"+value);
     switch(cc){
     case OpenWareMidiControl.PATCH_PARAMETER_A:
 	s1.set({value: value/100}, false);
@@ -36,7 +36,12 @@ function controlChange(status, cc, value){
     // case OpenWareMidiControl.PATCH_PARAMETER_H:
     // 	$("#p8").val(value);
     // 	s5.set({value: value/100}, false);
-    // 	break;
+	// 	break;
+    case 1:
+	cc1.set({value: value/100}, false);
+	break;
+    default:
+	log("received CC "+ch+":"+cc+":"+value);
     }
 }
 
