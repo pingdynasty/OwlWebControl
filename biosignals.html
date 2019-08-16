@@ -35,6 +35,7 @@
 	<!-- <td><canvas id="s7" nx="slider"></canvas></td> -->
 	<!-- <td><canvas id="s8" nx="slider"></canvas></td> -->
 	<!-- <td><canvas id="push" nx="button"></canvas></td> -->
+	<td><canvas id="pb" nx="slider"></canvas></td>
       </tr>
       <tr>
 	<td id="p1">Gain</td>
@@ -46,6 +47,7 @@
 	<!-- <td id="p7">G</td> -->
 	<!-- <td id="p8">H</td> -->
 	<!-- <td>Push</td> -->
+	<td>Pitch Bend</td>
       </tr>
     </table>
   </div>
@@ -99,6 +101,7 @@
     <p>Upload
       <input id="patchupload" type="file" name="files[]" multiple="true" accept=".syx,.sysex" />
       <output id="filenames"></output>
+      <input type="button" onclick="sendProgramRun(); return false;">Run</input>
     </p>
   </div>
 

@@ -21,7 +21,7 @@ HoxtonOwl.midiClient = {
     },
 
     logMidiEvent: function(ev){
-        HoxtonOwl.midiClient.logMidiData(ev.data);
+        // HoxtonOwl.midiClient.logMidiData(ev.data);
     },
 
     logMidiData: function(data){
@@ -84,6 +84,9 @@ HoxtonOwl.midiClient = {
         case 0xC0:
     	    programChange(event.data[1]);
     	    return;
+	case 0xE0:
+	    pitchBend(event.data[0] & 0x0f, (event.data[1] << 7) | event.data[2])
+	    return;
         case 0xF0:
       	    systemExclusive(event.data);
     	// sysexMessage = sysexMessage.concat(event.data);

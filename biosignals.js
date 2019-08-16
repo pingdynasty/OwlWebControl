@@ -1,23 +1,24 @@
 
+function pitchBend(channel, value) {
+    $("#pb").val(value);
+    pb.set({value: value/8192}, false);
+}
+
 function controlChange(status, cc, value){
     var ch = parseInt(status)&0x0f;
     cc = parseInt(cc);
-    console.log("received CC "+ch+":"+cc+":"+value);
+    log("received CC "+ch+":"+cc+":"+value);
     switch(cc){
     case OpenWareMidiControl.PATCH_PARAMETER_A:
-	$("#p1").val(value);
 	s1.set({value: value/100}, false);
 	break;
     case OpenWareMidiControl.PATCH_PARAMETER_B:
-	$("#p2").val(value);
 	s2.set({value: value/100}, false);
 	break;
     case OpenWareMidiControl.PATCH_PARAMETER_C:
-	$("#p3").val(value);
 	s3.set({value: value/100}, false);
 	break;
     case OpenWareMidiControl.PATCH_PARAMETER_D:
-	$("#p4").val(value);
 	s4.set({value: value/100}, false);
 	break;
     // case OpenWareMidiControl.PATCH_PARAMETER_E:
