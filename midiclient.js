@@ -25,9 +25,9 @@ HoxtonOwl.midiClient = {
     },
 
     logMidiData: function(data){
-      var arr = [];
-      for(var i=0; i<data.length; i++) arr.push((data[i]<16 ? '0' : '') + data[i].toString(16));
-      console.log('MIDI:', arr.join(' '));
+      // var arr = [];
+      // for(var i=0; i<data.length; i++) arr.push((data[i]<16 ? '0' : '') + data[i].toString(16));
+      // console.log('MIDI:', arr.join(' '));
     },
 
     onMIDIInit: function(midi, options) {

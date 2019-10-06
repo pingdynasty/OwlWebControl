@@ -35,8 +35,6 @@
 	<!-- <td><canvas id="s7" nx="slider"></canvas></td> -->
 	<!-- <td><canvas id="s8" nx="slider"></canvas></td> -->
 	<!-- <td><canvas id="push" nx="button"></canvas></td> -->
-	<td><canvas id="pb" nx="slider"></canvas></td>
-	<td><canvas id="cc1" nx="slider"></canvas></td>
       </tr>
       <tr>
 	<td id="p1">Gain</td>
@@ -48,8 +46,19 @@
 	<!-- <td id="p7">G</td> -->
 	<!-- <td id="p8">H</td> -->
 	<!-- <td>Push</td> -->
-	<td>Pitch Bend</td>
-	<td>CC1</td>
+      </tr>
+      <tr>
+	<td><canvas id="pb1" nx="slider"></canvas></td>
+	<td><canvas id="pb2" nx="slider"></canvas></td>
+	<td><canvas id="pb3" nx="slider"></canvas></td>
+	<td><canvas id="pb4" nx="slider"></canvas></td>
+	<!-- <td><canvas id="cc1" nx="slider"></canvas></td> -->
+      </tr>
+      <tr>
+	<td>PB1</td>
+	<td>PB2</td>
+	<td>PB3</td>
+	<td>PB4</td>
       </tr>
     </table>
   </div>
@@ -87,10 +96,10 @@
     <p id="patchmessage"></p>
     <p id="deviceid"></p>
     <p>Poll 
-      <input id="poll" type="checkbox" checked="true" onclick="setMonitor(this.checked); return true;"/>
+      <input id="poll" type="checkbox" onclick="setMonitor(this.checked); return true;"/>
     </p>
     <p>Remote
-      <input type="checkbox" checked="false" onclick="HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_CONTROL, this.checked?127 : 0); return true;"/>
+      <input type="checkbox" onclick="HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_CONTROL, this.checked?127 : 0); return true;"/>
     </p>
   </div>
 
@@ -103,7 +112,8 @@
     <p>Upload
       <input id="patchupload" type="file" name="files[]" multiple="true" accept=".syx,.sysex" />
       <output id="filenames"></output>
-      <input type="button" onclick="sendProgramRun(); return false;">Run</input>
+      <input type="button" onclick="; return false;">Run</input>
+      <input type="button" onclick="sendProgramStore(1); return false;">Store</input>
     </p>
   </div>
 

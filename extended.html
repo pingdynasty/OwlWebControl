@@ -96,6 +96,10 @@
     <p>Upload
       <input id="patchupload" type="file" name="files[]" multiple="true" accept=".syx,.sysex" />
       <output id="filenames"></output>
+      <input type="button" onclick="; return false;">Run</input>
+      <input type="button" onclick="sendProgramStore(1); return false;">Store 1</input>
+      <input type="button" onclick="sendProgramStore(2); return false;">Store 2</input>
+      <input type="button" onclick="sendProgramStore(3); return false;">Store 3</input>
     </p>
   </div>
 

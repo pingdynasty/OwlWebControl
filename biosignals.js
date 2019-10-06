@@ -1,8 +1,21 @@
 
 function pitchBend(channel, value) {
-    $("#pb").val(value);
+    // $("#pb").val(value);
     // pb.set({value: (value-8192)/8192}, false);
-    pb.set({value: value/16384}, false);
+    switch(channel){
+    case 1:
+	pb1.set({value: value/16384}, false);
+	break;
+    case 2:
+	pb2.set({value: value/16384}, false);
+	break;
+    case 3:
+	pb3.set({value: value/16384}, false);
+	break;
+    case 4:
+	pb4.set({value: value/16384}, false);
+	break;
+    }
 }
 
 function controlChange(status, cc, value){
@@ -53,7 +66,7 @@ function selectPatch(idx){
 
 $(document).ready(function() {
     $("#patchupload").on('change', function(evt) {
-	sendProgram(evt);
+    	sendProgram(evt);
     });
 
     $('#clear').on('click', function() {

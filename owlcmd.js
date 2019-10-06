@@ -246,6 +246,15 @@ function sendProgramRun(){
         HoxtonOwl.midiClient.midiOutput.send(msg, 0);
 }
 
+function sendProgramStore(slot){
+    console.log("sending sysex store ["+slot+"] command");
+    var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_OMNI_DEVICE, 
+               OpenWareMidiSysexCommand.SYSEX_FIRMWARE_STORE, 0, 0, 0, 0, slot, 0xf7 ];
+    HoxtonOwl.midiClient.logMidiData(msg);
+    if(HoxtonOwl.midiClient.midiOutput)
+        HoxtonOwl.midiClient.midiOutput.send(msg, 0);
+}
+
 function chunkData(data){
     var chunks = [];
     var start = 0;
@@ -299,7 +308,8 @@ function sendProgramFromUrl(url){
                 var data = new Uint8Array(arrayBuffer);
                 resolve(
                     sendProgramData(data).then(function(){
-                        sendProgramRun();
+			console.log("patch upload complete");
+                        // sendProgramRun();
                     }, function(err){
                         console.error(err);
                     })
