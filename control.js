@@ -1,4 +1,8 @@
 
+function pitchBend(channel, value) {
+    // console.log("received PB "+channel+":"+value);
+}    
+
 function controlChange(status, cc, value){
     var ch = parseInt(status)&0x0f;
     cc = parseInt(cc);
