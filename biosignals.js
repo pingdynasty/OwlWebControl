@@ -50,9 +50,9 @@ function controlChange(status, cc, value){
     // 	$("#p8").val(value);
     // 	s5.set({value: value/100}, false);
 	// 	break;
-    case 1:
-	cc1.set({value: value/100}, false);
-	break;
+    // case 1:
+    // 	cc1.set({value: value/100}, false);
+    // 	break;
     default:
 	log("received CC "+ch+":"+cc+":"+value);
     }
