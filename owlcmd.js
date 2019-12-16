@@ -130,14 +130,14 @@ function onMidiInitialised(){
     var outConnected = false,
         inConnected = false;
     for (var o = 0; o < HoxtonOwl.midiClient.midiOutputs.length; o++) {
-        if (HoxtonOwl.midiClient.midiOutputs[o].name.match('^OWL')) {
+        if (HoxtonOwl.midiClient.midiOutputs[o].name.match('^OWL-')) {
             HoxtonOwl.midiClient.selectMidiOutput(o);
             outConnected = true;
             break;
         }        
     }
     for (var i = 0; i < HoxtonOwl.midiClient.midiInputs.length; i++) {
-        if (HoxtonOwl.midiClient.midiInputs[i].name.match('^OWL')) {
+        if (HoxtonOwl.midiClient.midiInputs[i].name.match('^OWL-')) {
             HoxtonOwl.midiClient.selectMidiInput(i);
             inConnected = true;
             break;

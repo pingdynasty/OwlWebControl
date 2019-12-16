@@ -15,6 +15,15 @@ function pitchBend(channel, value) {
     case 4:
 	pb4.set({value: value/16384}, false);
 	break;
+    case 5:
+	pb5.set({value: value/16384}, false);
+	break;
+    case 6:
+	pb6.set({value: value/16384}, false);
+	break;
+    case 7:
+	pb7.set({value: value/16384}, false);
+	break;
     }
 }
 
