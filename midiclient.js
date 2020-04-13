@@ -72,11 +72,11 @@ HoxtonOwl.midiClient = {
         switch(event.data[0] & 0xf0) {
         case 0x90:
     	    if(event.data[2] != 0) {  // if velocity != 0, this is a note-on message
-    		noteOn(event.data[1], event.data[2]);
+    		noteOn(event.data[0], event.data[1], event.data[2]);
     		return;
     	    }
         case 0x80:
-    	    noteOff(event.data[1]);
+    	    noteOff(event.data[0], event.data[1]);
     	    return;
         case 0xB0:
     	    controlChange(event.data[0], event.data[1], event.data[2]);
@@ -168,6 +168,22 @@ HoxtonOwl.midiClient = {
         if(this.midiOutput)
         {
           this.midiOutput.send([0x80|this.midiChannel, note, velocity], 0);            
+        }
+    },
+    
+    sendStop: function() {
+        console.log("sending STOP");
+        if(this.midiOutput)
+        {
+          this.midiOutput.send([0xFC], 0);
+        }
+    },
+
+    sendStart: function() {
+        console.log("sending START");
+        if(this.midiOutput)
+        {
+          this.midiOutput.send([0xFA], 0);
         }
     },
 
