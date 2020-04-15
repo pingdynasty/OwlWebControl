@@ -7,12 +7,12 @@ function sleep(milliseconds) {
   }
 }
 
-function noteOn(note, velocity) {
-  console.log("received noteOn "+note+"/"+velocity);
+function noteOn(status, note, velocity) {
+    console.log("received noteOn "+(status&0x0f)+"/"+note+"/"+velocity);
 }
 
-function noteOff(note) {
-  console.log("received noteOff "+note);
+function noteOff(status, note) {
+    console.log("received noteOff "+(status&0x0f)+"/"+note);
 }
 
 function getStringFromSysex(data, startOffset, endOffset){
@@ -52,24 +52,35 @@ function systemExclusive(data) {
 	case OpenWareMidiSysexCommand.SYSEX_DEVICE_ID:
             var msg = getStringFromSysex(data, 4, 1);
 	    console.log("device id "+msg);
-	    $("#deviceid").text(msg);	    
-	    break;
-	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_STATS:
-            var msg = getStringFromSysex(data, 4, 1);
-	    console.log("program stats "+msg);
-	    $("#patchstatus").text(msg);	    
+	    log("Unique Device ID: "+msg);
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION:
             var msg = getStringFromSysex(data, 4, 1);
 	    console.log("firmware "+msg);
+	    log("Firmware version: "+msg);
 	    $("#ourstatus").text("Connected to "+msg);	    
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE:
             var msg = getStringFromSysex(data, 4, 1);
 	    console.log("program message "+msg);
+	    log("Program Message: "+msg);
 	    $("#patchmessage").text("["+msg+"]");
 	    break;
+	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_STATS:
+            var msg = getStringFromSysex(data, 4, 1);
+	    console.log("program stats "+msg);
+	    log("Program Stats: "+msg);
+	    break;
+	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_ERROR:
+            var msg = getStringFromSysex(data, 4, 1);
+	    console.log("program error "+msg);
+	    log("Error: "+msg);
+	    break;
 	case OpenWareMidiSysexCommand.SYSEX_DEVICE_STATS:
+            var msg = getStringFromSysex(data, 4, 1);
+	    console.log("device stats "+msg);
+	    log("Device Stats: "+msg);
+	    break;	    
 	default:
             var msg = getStringFromSysex(data, 4, 1);
 	    log("Unhandled message: "+msg);
@@ -93,17 +104,10 @@ function sendRequest(type){
 
 function sendStatusRequest(){
     sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE);
-    sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_STATS);
-    sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_STATS);
-    sendRequest(OpenWareMidiControl.PATCH_PARAMETER_A); // request parameter values
+    // sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_STATS);
+    // sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_STATS);
+    // sendRequest(OpenWareMidiControl.PATCH_PARAMETER_A); // request parameter values
 }
-
-// var doStatusRequestLoop = true;
-// function statusRequestLoop() {
-//     sendStatusRequest();
-//     if(doStatusRequestLoop)
-// 	setTimeout(statusRequestLoop, 2000);
-// }
 
 function setParameter(pid, value){
     console.log("parameter "+pid+": "+value);
@@ -129,19 +133,27 @@ function onMidiInitialised(){
     // auto set the input and output to an OWL   
     var outConnected = false,
         inConnected = false;
-    for (var o = 0; o < HoxtonOwl.midiClient.midiOutputs.length; o++) {
-        if (HoxtonOwl.midiClient.midiOutputs[o].name.match('^OWL-')) {
-            HoxtonOwl.midiClient.selectMidiOutput(o);
+    for (var i = 0; i < HoxtonOwl.midiClient.midiOutputs.length; i++) {
+	var name = HoxtonOwl.midiClient.midiOutputs[i].name;
+	console.log("option: "+i+": "+name);
+        if (!outConnected && name.match('^OWL-')) {
+            HoxtonOwl.midiClient.selectMidiOutput(i);
             outConnected = true;
-            break;
-        }        
+	    $('#midiOutputs').append($('<option>', {value:i, text: name, selected: true}));
+        }else{
+	    $('#midiOutputs').append($('<option>', {value:i, text: name}));
+	}
     }
     for (var i = 0; i < HoxtonOwl.midiClient.midiInputs.length; i++) {
-        if (HoxtonOwl.midiClient.midiInputs[i].name.match('^OWL-')) {
+	var name = HoxtonOwl.midiClient.midiInputs[i].name;
+	console.log("option: "+i+": "+name);
+        if (!inConnected && name.match('^OWL-')) {
             HoxtonOwl.midiClient.selectMidiInput(i);
             inConnected = true;
-            break;
-        }        
+	    $('#midiInputs').append($('<option>', {value:i, text: name, selected: true}));
+        }else{
+	    $('#midiInputs').append($('<option>', {value:i, text: name}));
+	}
     }
     if (inConnected && outConnected) {
         console.log('connected to an OWL');
@@ -149,7 +161,7 @@ function onMidiInitialised(){
         $('#load-owl-button').show();
 	sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION);
 	sendLoadRequest(); // load patches
-	// setMonitor(true);
+	setMonitor(true);
     } else {
         console.log('failed to connect to an OWL');
         $('#ourstatus').text('Failed to connect')
@@ -179,39 +191,7 @@ function setMonitor(poll){
     }
 }
 
-// function hookupButtonEvents() {
-
-    // $("#connect").on('click', connectToOwl);
-
-    // $("#monitor").on('click', function() {
-    // 	if(monitorTask == undefined){
-    // 	    monitorTask = window.setInterval(sendStatusRequest, 1000);
-    // 	}else{
-    // 	    clearInterval(monitorTask);
-    // 	    monitorTask = undefined;
-    // 	}
-    // });
-
-    // initialiseMidi(onMidiInitialised);
-    
-    // $('#clear').on('click', function() {
-    // 	$('#log').empty();
-    // 	return false;
-    // });
-// }
-
-function sendProgram(evt){
-    var files = evt.target.files; // FileList object
-    // // files is a FileList of File objects. List some properties.
-    // var output = [];
-    // for (var i = 0, f; f = files[i]; i++) {
-    // 	output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
-    //                 f.size, ' bytes, last modified: ',
-    //                 f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-    //                 '</li>');
-    // }
-    // document.getElementById('filenames').innerHTML = '<ul>' + output.join('') + '</ul>';
-    var reader = new FileReader();
+function sendProgram(files){
     for (var i = 0, f; f = files[i]; i++) {
 	// Only process syx files.
 	// if (!f.name.match('*\\.syx')) {
@@ -222,7 +202,7 @@ function sendProgram(evt){
 	// Closure to capture the file information.
 	reader.onload = (function(theFile) {
             return function(e) {
-		console.log("read file "+theFile.name);
+		log("Reading file "+theFile.name);
 		sendProgramFromUrl(e.target.result);
 		// sendProgramData(e.target.result).then(function(){
 		//     sendProgramRun();
@@ -236,6 +216,21 @@ function sendProgram(evt){
     }
 }
 
+function sendFirmwareFlash(checksum){
+    var crc = parseInt(checksum, 16);
+    console.log("sending firmware flash ["+checksum+":"+crc+"] command");
+    var b = [ ((crc&0x80000000)?8:0) | ((crc&0x800000)?4:0) | ((crc&0x8000)?2:0) | ((crc&0x80)?1:0),
+	      (crc>>24) & 0x7f, 
+	      (crc>>16) & 0x7f, 
+	      (crc>>8) & 0x7f, 
+	      (crc>>0) & 0x7f];
+    console.log("bytes ["+b+"] command");
+    var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_OMNI_DEVICE, 
+               OpenWareMidiSysexCommand.SYSEX_FIRMWARE_FLASH, b[0], b[1], b[2], b[3], b[4], 0xf7 ];
+    HoxtonOwl.midiClient.logMidiData(msg);
+    if(HoxtonOwl.midiClient.midiOutput)
+        HoxtonOwl.midiClient.midiOutput.send(msg, 0);
+}
 
 function sendProgramRun(){
     console.log("sending sysex run command");
@@ -291,7 +286,7 @@ function sendDataChunks(index, chunks, resolve){
 
 function sendProgramData(data){
     return new Promise( (resolve, reject) => {
-        console.log("sending program data "+data.length+" bytes"); 
+        log("Sending data "+data.length+" bytes"); 
         var chunks = chunkData(data);
         sendDataChunks(0, chunks, resolve);
     });
@@ -308,8 +303,8 @@ function sendProgramFromUrl(url){
                 var data = new Uint8Array(arrayBuffer);
                 resolve(
                     sendProgramData(data).then(function(){
-			console.log("patch upload complete");
-                        // sendProgramRun();
+			log("Upload complete");
+			sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE);
                     }, function(err){
                         console.error(err);
                     })
@@ -324,22 +319,4 @@ function sendProgramFromUrl(url){
 function loadPatchFromServer(patchId){
     return sendProgramFromUrl(API_END_POINT + '/builds/' + patchId + '?format=sysx&amp;download=1');
 }
-
-// function sendProgramFromUrl(url){
-//     console.log("sending patch from url "+url);
-//     var oReq = new XMLHttpRequest();
-//     oReq.responseType = "arraybuffer";
-//     oReq.onload = function (oEvent) {
-//     console.log("here");    
-//     var arrayBuffer = oReq.response; // Note: not oReq.responseText
-//     if(arrayBuffer) {
-//         console.log("there");   
-//         var data = new Uint8Array(arrayBuffer);
-//         sendProgramData(data);
-//         sendProgramRun();
-//     }
-//     }
-//     oReq.open("GET", url, true);
-//     oReq.send();
-// }
 
