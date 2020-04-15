@@ -26,21 +26,26 @@
     <!-- <p id="patchmessage"></p> -->
   </div>
 
+  <div>
+    <h3>Download Firmware</h3>
+    <p><a href="https://github.com/pingdynasty/OpenWare/releases" target="_blank">OpenWare Releases</a></p>
+  </div>
   
   <div>
     <h3>Flash Firmware</h3>
-      <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_BOOTLOADER_COMMAND);"> Reset to Boot Loader</button></p>
-
-    <form>
-      <p><input type="file" name="files[]" multiple="true" /></p>
-      <p><button type="button" onclick="sendProgram(this.form[0].files)">Flash firmware</button></p>
-    </form>
+    <ol>
+      <li><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_BOOTLOADER_COMMAND);"> Reset to Boot Loader</button></li>
+      <li><button onclick="location.reload();">Reload Page</button></li>
+      <form>
+	<li><input type="file" name="files[]" multiple="false" accept=".syx"/></li>	  
+	<li><button type="button" onclick="sendProgram(this.form[0].files)">Flash firmware</button></li>
+      </form>
     <!-- <form onsubmit="sendFirmwareFlash(this[0].value); return false;" target="#"> -->
     <!--   Checksum: <input type="text" name="crc32"/> -->
     <!--   <input type="submit">Flash firmware</input> -->
     <!-- </form> -->
-
-    <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_DEVICE_RESET_COMMAND);"> Device Reset</button></p>
+      <li>Wait for <strong>Firmware upload complete</strong> message</li>
+    <li><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_DEVICE_RESET_COMMAND);"> Device Reset</button></li>
   </div>
 
   <div>
