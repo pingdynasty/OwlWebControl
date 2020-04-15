@@ -63,7 +63,7 @@ function systemExclusive(data) {
 	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE:
             var msg = getStringFromSysex(data, 4, 1);
 	    console.log("program message "+msg);
-	    log("Program Message: "+msg);
+	    log("Device Message: "+msg);
 	    $("#patchmessage").text("["+msg+"]");
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_STATS:
@@ -303,7 +303,7 @@ function sendProgramFromUrl(url){
                 var data = new Uint8Array(arrayBuffer);
                 resolve(
                     sendProgramData(data).then(function(){
-			log("Upload complete");
+			log("Data sent");
 			sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE);
                     }, function(err){
                         console.error(err);
