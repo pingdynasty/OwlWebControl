@@ -278,7 +278,7 @@ function sendDataChunks(index, chunks, resolve){
         }
         sendDataTimeout = window.setTimeout(function(){
             sendDataChunks(++index, chunks, resolve);
-        },0);
+        }, 1);
     } else {
         resolve && resolve();
     }
