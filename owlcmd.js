@@ -105,7 +105,7 @@ function sendRequest(type){
 function sendStatusRequest(){
     sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE);
     // sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_STATS);
-    // sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_STATS);
+    sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_STATS);
     // sendRequest(OpenWareMidiControl.PATCH_PARAMETER_A); // request parameter values
 }
 
@@ -263,20 +263,14 @@ function chunkData(data){
     return chunks;
 }
 
-var sendDataTimeout;
 function sendDataChunks(index, chunks, resolve){
-    index = index || 0;
-    if(sendDataTimeout){
-        window.clearTimeout(sendDataTimeout);
-        sendDataTimeout = null;
-    }
     if(index < chunks.length){
         HoxtonOwl.midiClient.logMidiData(chunks[index]);
         if(HoxtonOwl.midiClient.midiOutput){
-            //console.log("sending chunk "+ index + ' with '+ chunks[index].length +" bytes sysex");
+            console.log("sending chunk "+ index + ' with '+ chunks[index].length +" bytes sysex");
             HoxtonOwl.midiClient.midiOutput.send(chunks[index], 0);            
         }
-        sendDataTimeout = window.setTimeout(function(){
+        window.setTimeout(function(){
             sendDataChunks(++index, chunks, resolve);
         }, 1);
     } else {

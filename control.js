@@ -1,6 +1,6 @@
 
 function pitchBend(channel, value) {
-    // console.log("received PB "+channel+":"+value);
+    console.log("received PB "+channel+":"+value);
 }    
 
 function controlChange(status, cc, value){
