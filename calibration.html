@@ -74,6 +74,7 @@
   <div>
     <h3>Calibration</h3>
     <p>
+      <button type="button" onclick="HoxtonOwl.midiClient.sendCc(7, 127);">Set Volume</button>
       <button type="button" onclick="sendProgramFromUrl('https://www.rebeltech.org/api/builds/5fb33858c4b91d679aecd9b9?format=sysx&amp;download=1').then(function(){ sendProgramRun(); }, function(err){ console.error(err); });">Load test patch</button>
       <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(27, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(27, 0);">Button 1</button>
       <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(28, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(28, 0);">Button 2</button>
@@ -103,7 +104,7 @@
       </p>
     </form>
     <p>Module reading: <span id="patchmessage">&nbsp;</span></p>
-    <button onclick="sendPc(1); HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store</button>
+    <button onclick="HoxtonOwl.midiClient.sendPc(1); HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store</button>
   </div>
 
   <div>
@@ -135,7 +136,7 @@
   
   <div>
     <h3>Settings</h3>
-    <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store</button>
+    <!-- <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store</button> -->
     <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_RESET); return false;">Reset</button>
     <button onclick="confirmErase();"> Erase</button>
   </div>
