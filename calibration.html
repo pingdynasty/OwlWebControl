@@ -13,6 +13,14 @@
     td { text-align: center; }
   </style>
   <script>
+    function confirmErase(){
+	if(confirm('Are you sure you want to delete patch settings and patches?')){
+	    HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);
+	    log('Settings and patches erased');
+	}else{
+	    log('Settings and patches not erased');	    
+	}	    
+    }
     function calculateScalar(s1, s2, v1, v2){
 	return (v1 - v2) / (s1 - s2);
     }
@@ -129,7 +137,7 @@
     <h3>Settings</h3>
     <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store</button>
     <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_RESET); return false;">Reset</button>
-    <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);"> Erase</button>
+    <button onclick="confirmErase();"> Erase</button>
   </div>
 
   <div>
