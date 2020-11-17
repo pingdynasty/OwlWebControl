@@ -73,6 +73,16 @@
 
   <div>
     <h3>Calibration</h3>
+    <ol>
+      <li>Connect the Left output to the Left input, and simultaneously to a voltmeter</li>
+      <li>Press and hold button 1 and copy the value from the multimeter to the <i>Button 1 Voltage</i> box</li>
+      <li>Repeat for Button 2</li>
+      <li>Click Calibrate Output</li>
+      <li>Press and hold button 1 and copy the "High" reading from the module to the <i>Button 1 Sample x1000</i> box</li>
+      <li>Repeat for Button 2, copying the "Low" reading.</li>
+      <li>Click Calibrate Input</li>
+      <li>Click Store</li>
+    </ol>
     <p>
       <button type="button" onclick="HoxtonOwl.midiClient.sendCc(7, 127);">Set Volume</button>
       <button type="button" onclick="sendProgramFromUrl('https://www.rebeltech.org/api/builds/5fb33858c4b91d679aecd9b9?format=sysx&amp;download=1').then(function(){ sendProgramRun(); }, function(err){ console.error(err); });">Load test patch</button>
