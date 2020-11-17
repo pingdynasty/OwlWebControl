@@ -46,7 +46,6 @@ function controlChange(status, cc, value){
 function selectPatch(idx){
     console.log("select patch "+idx);
     HoxtonOwl.midiClient.sendPc(idx);    
-    // patchname.innerHTML = "";
 }
 
 $(document).ready(function() {

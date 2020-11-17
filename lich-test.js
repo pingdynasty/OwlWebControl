@@ -48,7 +48,7 @@ function systemExclusive(data){
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE:
             var msg = getStringFromSysex(data, 4, 1);
-	    log("Message: "+msg);
+	    // log("Message: "+msg);
 	    $("#patchmessage").text(msg);
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_STATS:

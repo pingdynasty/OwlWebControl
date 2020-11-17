@@ -27,37 +27,42 @@
 	// ensure negative numbers come out right
 	return (parseInt(f*65535) >>> 0).toString(16); // I have no idea why this works
     }
-    function calibrate(f){
+    function calibrateOut(f){
+	// f = document.getElementById('calibration');
+	s1 = 0.5
+	s2 = -0.5
+	v1 = f['v1'].value;
+	v2 = f['v2'].value;
+	o = calculateOffset(s1, s2, v1, v2);
+	s = calculateScalar(s1, s2, v1, v2);
+	f['out-offset'].value = o;
+	f['out-scalar'].value = s;
+	sendSetting('OS', s*65535)
+	sendSetting('OO', o*65535)
+    }
+    function calibrateIn(f){
 	s1 = f['s1'].value/1000;
 	s2 = f['s2'].value/1000;
 	v1 = f['v1'].value;
 	v2 = f['v2'].value;
-	s = calculateScalar(s1, s2, v1, v2);
 	o = calculateOffset(s1, s2, v1, v2);
-	f['scalar'].value = s;
-	f['offset'].value = o;
-	if(f.id == 'calibration-input'){
-	    sendSetting('IS', s*65535)
-	    sendSetting('IO', o*65535)
-	}else if(f.id == 'calibration-output'){
-	    sendSetting('OS', s*65535)
-	    sendSetting('OO', o*65535)
-	}
+	s = calculateScalar(s1, s2, v1, v2);
+	f['in-offset'].value = o;
+	f['in-scalar'].value = s;
+	sendSetting('IS', s*65535)
+	sendSetting('IO', o*65535)
     }
   </script>
 </head>
 
-  <h2><span id="firmwareversion">OpenWareLaboratory</span></h2>
+  <h2>OpenWareLaboratory</h2>
 
-  <div>
-    <h3 id="patchname"></h3>
-  </div>
+  <h3><span id="patchname">&nbsp;</span></h3>
 
   <div>
     <h3>Status</h3>
     <p id="ourstatus">Not Connected</p>
     <p id="patchstatus">&nbsp;</p>
-    <p id="patchmessage">&nbsp;</p>
   </div>
 
   <div>
@@ -85,12 +90,6 @@
 
   <div>
     <h3>Query</h3>
-    <!-- status <input type="button" onclick="sendStatusRequest(); return false;"/> -->
-    <!-- load <input type="button" onclick="sendLoadRequest(); return false;"/> -->
-    <!-- led <input type="button" onclick="sendRequest(OpenWareMidiControl.LED); return false;"/> -->
-    <!-- settings <input type="button" onclick="sendRequest(127); return false;"/> -->
-    <!-- parameter values <input type="button" onclick="sendRequest(OpenWareMidiControl.PATCH_PARAMETER_A); return false;"/> -->
-
     <p>MIDI In
       <select id="midiInputs" onchange="HoxtonOwl.midiClient.selectMidiInput(this.value)">
 	<option value="0xff"><i>none</i></option>
@@ -134,51 +133,52 @@
   -->
   
   <div>
-    <p>Set Configuration:
-      <form>
-	<input name="key" type="text"/>
-	<input name="value" type="text"/>
-	<button type="button" onclick="HoxtonOwl.midiClient.sendSysexString(OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, this.form[0].value+parseInt(this.form[1].value).toString(16))">Send</button>
-      </form>
-    </p>
-    <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store Settings</button>
-    <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_RESET); return false;">Reset Settings</button>
-    <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);"> Erase Flash Storage</button>
-  </div>
+    <h3>Settings</h3>
+    <!-- <p>Set Configuration: -->
+    <!--   <form> -->
+    <!-- 	<input name="key" type="text"/> -->
+    <!-- 	<input name="value" type="text"/> -->
+    <!-- 	<button type="button" onclick="HoxtonOwl.midiClient.sendSysexString(OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, this.form[0].value+parseInt(this.form[1].value).toString(16))">Send</button> -->
+    <!--   </form> -->
+    <!-- </p> -->
+    <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store</button>
+    <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_RESET); return false;">Reset</button>
+    <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);"> Erase</button>
   </div>
 
   <div>
     <h3>Calibration</h3>
-      <form id="calibration-input">
-	<p>
-	  Sample x1000 <input name="s1" type="number" step="any"/>
-	  Voltage <input name="v1" type="number" value="1" step="any"/>V
-	</p>
-	<p>
-	  Sample x1000 <input name="s2" type="number" step="any"/>
-	  Voltage <input name="v2" type="number" value="3" step="any"/>V
-	</p>
-	<p>
-	  <button onclick="calibrate(this.form); return false;">Calibrate Input</button>
-	  Offset <input name="offset" type="number" step="any"/>
-	  Scalar <input name="scalar" type="number" step="any"/>
-	</p>
-      </form>
-      <form id="calibration-output">
-	<p>
-	  Sample x1000 <input name="s1" type="number" step="any" value="500"/>
-	  Voltage <input name="v1" type="number" step="any"/>V
-	</p>
-	<p>
-	  Sample x1000 <input name="s2" type="number" step="any" value="-500"/>
-	  Voltage <input name="v2" type="number" step="any"/>V
-	</p>
-	<p>
-	  <button onclick="calibrate(this.form); return false;">Calibrate Output</button>
-	  Offset <input name="offset" type="number" step="any"/>
-	  Scalar <input name="scalar" type="number" step="any"/>
-	</p>
-      </form>
+    <p>
+      <button type="button" onclick="sendProgramFromUrl('https://www.rebeltech.org/api/builds/5fb33858c4b91d679aecd9b9?format=sysx&amp;download=1').then(function(){ sendProgramRun(); }, function(err){ console.error(err); });">Load test patch</button>
+      <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(27, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(27, 0);">Button 1</button>
+      <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(28, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(28, 0);">Button 2</button>
+    </p>
+    <form id="calibration">
+      <p>
+	Button 1 Voltage <input name="v1" type="number" step="any"/>V
+      </p>
+      <p>
+	Button 2 Voltage <input name="v2" type="number" step="any"/>V
+      </p>
+      <p>
+	<button onclick="calibrateOut(this.form); return false;">Calibrate Output</button>
+	Offset <input name="out-offset" type="number" step="any"/>
+	Scalar <input name="out-scalar" type="number" step="any"/>
+      </p>
+      <p>
+	Button 1 Sample x1000 <input name="s1" type="number" step="any"/>
+      </p>
+      <p>
+	Button 2 Sample x1000 <input name="s2" type="number" step="any"/>
+      </p>
+      <p>
+	<button onclick="calibrateIn(this.form); return false;">Calibrate Input</button>
+	Offset <input name="in-offset" type="number" step="any"/>
+	Scalar <input name="in-scalar" type="number" step="any"/>
+      </p>
+    </form>
+    <p>Module reading: <span id="patchmessage">&nbsp;</span></p>
+    <button onclick="sendPc(1); HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store</button>
   </div>
 
   <div>

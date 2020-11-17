@@ -14,7 +14,7 @@
   </style>
   <script>
     function confirmErase(){
-	if(confirm('Are you sure you want to delete patch settings and patches?')){
+	if(confirm('Are you sure you want to erase all settings and patches?')){
 	    HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);
 	    log('Settings and patches erased');
 	}else{
