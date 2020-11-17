@@ -27,8 +27,7 @@
 	// ensure negative numbers come out right
 	return (parseInt(f*65535) >>> 0).toString(16); // I have no idea why this works
     }
-    function calibrateInput(){
-	f = document.getElementById('calibration');
+    function calibrate(f){
 	s1 = f['s1'].value/1000;
 	s2 = f['s2'].value/1000;
 	v1 = f['v1'].value;
@@ -37,8 +36,13 @@
 	o = calculateOffset(s1, s2, v1, v2);
 	f['scalar'].value = s;
 	f['offset'].value = o;
-	sendSetting('IS', s*65535)
-	sendSetting('IO', o*65535)
+	if(f.id == 'calibration-input'){
+	    sendSetting('IS', s*65535)
+	    sendSetting('IO', o*65535)
+	}else if(f.id == 'calibration-output'){
+	    sendSetting('OS', s*65535)
+	    sendSetting('OO', o*65535)
+	}
     }
   </script>
 </head>
@@ -145,7 +149,7 @@
 
   <div>
     <h3>Calibration</h3>
-      <form id="calibration">
+      <form id="calibration-input">
 	<p>
 	  Sample x1000 <input name="s1" type="number" step="any"/>
 	  Voltage <input name="v1" type="number" value="1" step="any"/>V
@@ -154,20 +158,28 @@
 	  Sample x1000 <input name="s2" type="number" step="any"/>
 	  Voltage <input name="v2" type="number" value="3" step="any"/>V
 	</p>
-	<button onclick="calibrateInput(); return false;">Calibrate Input</button>
 	<p>
+	  <button onclick="calibrate(this.form); return false;">Calibrate Input</button>
 	  Offset <input name="offset" type="number" step="any"/>
-	  <!-- <button type="button" onclick="sendSetting('IO', this.form['offset'].value*65535)">Send</button> -->
+	  Scalar <input name="scalar" type="number" step="any"/>
+	</p>
+      </form>
+      <form id="calibration-output">
+	<p>
+	  Sample x1000 <input name="s1" type="number" step="any" value="500"/>
+	  Voltage <input name="v1" type="number" step="any"/>V
 	</p>
 	<p>
+	  Sample x1000 <input name="s2" type="number" step="any" value="-500"/>
+	  Voltage <input name="v2" type="number" step="any"/>V
+	</p>
+	<p>
+	  <button onclick="calibrate(this.form); return false;">Calibrate Output</button>
+	  Offset <input name="offset" type="number" step="any"/>
 	  Scalar <input name="scalar" type="number" step="any"/>
-	  <!-- <button type="button" onclick="sendSetting('IS', this.form['scalar'].value*65535)">Send</button> -->
 	</p>
       </form>
   </div>
-
-  <!-- <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);"> Erase Flash Storage</button></p> -->
-  <!-- <p><button onclick="HoxtonOwl.midiClient.sendSysexData(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE, [0, 0, 0, 0, 4]);"> Erase Sector 4</button></p> -->
 
   <div>
     <h3>Messages</h3>
