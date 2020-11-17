@@ -11,7 +11,36 @@
   <script src="lich-test.js"></script>
   <style>
     td { text-align: center; }
-</style>
+  </style>
+  <script>
+    function calculateScalar(s1, s2, v1, v2){
+	return (v1 - v2) / (s1 - s2);
+    }
+    function calculateOffset(s1, s2, v1, v2){
+	s = calculateScalar(s1, s2, v1, v2);
+	a = (s1 - v1/s)
+	b = (s2 - v2/s)
+	console.log("a="+ a +" b="+ b +" avg="+ (a + b)/2);
+	return (a + b)/2;
+    }
+    function tohex(f){
+	// ensure negative numbers come out right
+	return (parseInt(f*65535) >>> 0).toString(16); // I have no idea why this works
+    }
+    function calibrateInput(){
+	f = document.getElementById('calibration');
+	s1 = f['s1'].value/1000;
+	s2 = f['s2'].value/1000;
+	v1 = f['v1'].value;
+	v2 = f['v2'].value;
+	s = calculateScalar(s1, s2, v1, v2);
+	o = calculateOffset(s1, s2, v1, v2);
+	f['scalar'].value = s;
+	f['offset'].value = o;
+	sendSetting('IS', s*65535)
+	sendSetting('IO', o*65535)
+    }
+  </script>
 </head>
 
   <h2><span id="firmwareversion">OpenWareLaboratory</span></h2>
@@ -83,6 +112,7 @@
     <button onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND); return false;">settings</button>
   </div>
 
+  <!--
   <div>
     <p>Set CV Tuning:
       <form>
@@ -93,11 +123,12 @@
 	  <option value="OS">Output Scalar</option>
 	</select>
 	<input name="value" type="number"/>
-	<button type="button" onclick="HoxtonOwl.midiClient.sendSysexString(OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, this.form[0].value+parseInt(this.form[1].value).toString(16))">Send</button>
+	<button type="button" onclick="sendSetting(this.form[0].value, this.form[1].value*65535)">Send</button>
       </form>
   </p>
   </div>
-
+  -->
+  
   <div>
     <p>Set Configuration:
       <form>
@@ -105,9 +136,34 @@
 	<input name="value" type="text"/>
 	<button type="button" onclick="HoxtonOwl.midiClient.sendSysexString(OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, this.form[0].value+parseInt(this.form[1].value).toString(16))">Send</button>
       </form>
-  </p>
+    </p>
     <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store Settings</button>
     <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_RESET); return false;">Reset Settings</button>
+    <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);"> Erase Flash Storage</button>
+  </div>
+  </div>
+
+  <div>
+    <h3>Calibration</h3>
+      <form id="calibration">
+	<p>
+	  Sample x1000 <input name="s1" type="number" step="any"/>
+	  Voltage <input name="v1" type="number" value="1" step="any"/>V
+	</p>
+	<p>
+	  Sample x1000 <input name="s2" type="number" step="any"/>
+	  Voltage <input name="v2" type="number" value="3" step="any"/>V
+	</p>
+	<button onclick="calibrateInput(); return false;">Calibrate Input</button>
+	<p>
+	  Offset <input name="offset" type="number" step="any"/>
+	  <!-- <button type="button" onclick="sendSetting('IO', this.form['offset'].value*65535)">Send</button> -->
+	</p>
+	<p>
+	  Scalar <input name="scalar" type="number" step="any"/>
+	  <!-- <button type="button" onclick="sendSetting('IS', this.form['scalar'].value*65535)">Send</button> -->
+	</p>
+      </form>
   </div>
 
   <!-- <p><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);"> Erase Flash Storage</button></p> -->

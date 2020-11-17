@@ -63,13 +63,14 @@ function systemExclusive(data) {
 	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE:
             var msg = getStringFromSysex(data, 4, 1);
 	    console.log("program message "+msg);
-	    log("Device Message: "+msg);
-	    $("#patchmessage").text("["+msg+"]");
+	    log("Program Message: "+msg);
+	    $("#patchmessage").text(msg);
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_STATS:
             var msg = getStringFromSysex(data, 4, 1);
 	    console.log("program stats "+msg);
-	    log("Program Stats: "+msg);
+	    // log("Program Stats: "+msg);
+	    $("#patchstatus").text(msg);
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_ERROR:
             var msg = getStringFromSysex(data, 4, 1);

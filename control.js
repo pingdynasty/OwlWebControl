@@ -56,6 +56,8 @@ $(document).ready(function() {
 
     $('#clear').on('click', function() {
 	$('#log').empty();
+	$('#patchmessage').empty();
+	$('#patchstatus').empty();
 	return false;
     });
 

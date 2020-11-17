@@ -9,6 +9,19 @@ function controlChange(status, cc, value){
     console.log("received CC "+ch+":"+cc+":"+value);
 }
 
+function sendSetting(sid, value){
+    console.log("Setting "+sid+" = "+value);
+    // HoxtonOwl.midiClient.sendSysexString(OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, sid+parseInt(value).toString(16));
+    HoxtonOwl.midiClient.sendSysexString(OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, sid+parseInt(value).toString(16));
+}
+
+function handleSetting(sid, value){
+    console.log("Setting: "+sid+" = "+parseInt(value, 16));
+    if(["IO", "IS", "OO", "OS"].indexOf(sid) > -1)
+	log("Setting: "+sid+" = "+parseInt(value, 16)/65535);
+	// log("Setting: "+sid+" = 0x"+(parseInt(value, 16) >>> 0).toString(16));
+}
+
 function systemExclusive(data){
     console.log("received sysex "+data);
     if(data.length > 3 && data[0] == 0xf0
@@ -53,7 +66,7 @@ function systemExclusive(data){
 	    break;	    
 	case OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND:
             var msg = getStringFromSysex(data, 4, 1);
-	    log("Setting: "+msg.substring(0, 2)+" = "+parseInt(msg.substring(2), 16));
+	    handleSetting(msg.substring(0, 2), msg.substring(2));
 	    break;	    
 	default:
             var msg = getStringFromSysex(data, 4, 1);
