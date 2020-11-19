@@ -13,6 +13,11 @@
     td { text-align: center; }
   </style>
   <script>
+    function loadTestPatch(){
+	HoxtonOwl.midiClient.sendCc(7, 127); // set max volume
+	sendProgramFromUrl('https://www.rebeltech.org/api/builds/5fb33858c4b91d679aecd9b9?format=sysx&amp;download=1')
+	    .then(function(){ sendProgramRun(); }, function(err){ console.error(err); });			    
+    }
     function confirmErase(){
 	if(confirm('Are you sure you want to erase all settings and patches?')){
 	    HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);
@@ -74,6 +79,8 @@
   <div>
     <h3>Calibration</h3>
     <ol>
+      <li>Connect an OWL device (reload page if necessary)</li>
+      <li>Click <i>Load test patch</i></li>
       <li>Connect the Left output to the Left input, and simultaneously to a voltmeter</li>
       <li>Press and hold button 1 and copy the value from the multimeter to the <i>Button 1 Voltage</i> box</li>
       <li>Repeat for Button 2</li>
@@ -84,8 +91,7 @@
       <li>Click Store</li>
     </ol>
     <p>
-      <button type="button" onclick="HoxtonOwl.midiClient.sendCc(7, 127);">Set Volume</button>
-      <button type="button" onclick="sendProgramFromUrl('https://www.rebeltech.org/api/builds/5fb33858c4b91d679aecd9b9?format=sysx&amp;download=1').then(function(){ sendProgramRun(); }, function(err){ console.error(err); });">Load test patch</button>
+      <button type="button" onclick="loadTestPatch();">Load test patch</button>
       <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(27, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(27, 0);">Button 1</button>
       <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(28, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(28, 0);">Button 2</button>
     </p>
