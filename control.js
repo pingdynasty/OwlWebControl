@@ -43,15 +43,23 @@ function controlChange(status, cc, value){
     }
 }
 
+function sendPatch(files, pid){
+    sendProgram(files).then(function(){
+	log("sent patch "+pid);
+	if(pid <= 0)
+	    sendProgramRun();
+	else
+	    sendProgramStore(pid);
+	sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE);
+    }, function(err){ console.error(err); });
+}
+
 function selectPatch(idx){
     console.log("select patch "+idx);
     HoxtonOwl.midiClient.sendPc(idx);    
 }
 
 $(document).ready(function() {
-    $("#patchupload").on('change', function(evt) {
-	sendProgram(evt);
-    });
 
     $('#clear').on('click', function() {
 	$('#log').empty();

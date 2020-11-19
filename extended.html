@@ -9,7 +9,7 @@
   <script src="OpenWareMidiControl.js"></script>
   <script src="owlcmd.js"></script>
   <script src="control.js"></script>
-  <script src="nexusUI.js"></script>	
+  <script src="nexusUI.js"></script>
   <style>
     td { text-align: center; }
 </style>
@@ -92,12 +92,11 @@
       <!-- <select id="patchnames" onchange="selectPatch(this.value)"></select> -->
     </p>
     <p>Upload
-      <input id="patchupload" type="file" name="files[]" multiple="true" accept=".syx,.sysex" />
-      <output id="filenames"></output>
-      <input type="button" onclick="; return false;">Run</input>
-      <input type="button" onclick="sendProgramStore(1); return false;">Store 1</input>
-      <input type="button" onclick="sendProgramStore(2); return false;">Store 2</input>
-      <input type="button" onclick="sendProgramStore(3); return false;">Store 3</input>
+      <form>
+	<input type="file" name="files" multiple="false" accept=".syx,.sysex"/>
+	<button type="button" onclick="sendPatch(this.form[0].files, 0); ">Run</button>
+	<button type="button" onclick="sendPatch(this.form[0].files, prompt('Store in slot', 1)); ">Store</button>
+      </form>
     </p>
   </div>
 

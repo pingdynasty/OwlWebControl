@@ -165,7 +165,7 @@ function onMidiInitialised(){
 	setMonitor(true);
     } else {
         console.log('failed to connect to an OWL');
-        $('#ourstatus').text('Failed to connect')
+        $('#ourstatus').text('Failed to connect. Try again.')
         $('#load-owl-button').hide();
     }
 }
@@ -192,29 +192,27 @@ function setMonitor(poll){
     }
 }
 
-function sendProgram(files){
-    for (var i = 0, f; f = files[i]; i++) {
-	// Only process syx files.
-	// if (!f.name.match('*\\.syx')) {
-        //     continue;
-	// }
-	var reader = new FileReader();
+function sendProgram(files, resolve){
+    return new Promise((resolve, reject) => {
+	for (var i = 0, f; f = files[i]; i++) {
+	    // Only process syx files.
+	    // if (!f.name.match('*\\.syx')) {
+            //     continue;
+	    // }
+	    var reader = new FileReader();
 
-	// Closure to capture the file information.
-	reader.onload = (function(theFile) {
-            return function(e) {
-		log("Reading file "+theFile.name);
-		sendProgramFromUrl(e.target.result);
-		// sendProgramData(e.target.result).then(function(){
-		//     sendProgramRun();
-		// }, function(err){
-		//     console.error(err);
-		// });
-            };
-	})(f);
-	reader.readAsDataURL(f);
-	// reader.readAsBinaryString(f);
-    }
+	    // Closure to capture the file information.
+	    reader.onload = (function(theFile) {
+		return function(e) {
+		    log("Reading file "+theFile.name);
+		    sendProgramFromUrl(e.target.result, resolve).then(
+			function(){resolve && resolve();});
+		};
+	    })(f);
+	    reader.readAsDataURL(f);
+	    // reader.readAsBinaryString(f);
+	}	
+    });
 }
 
 function sendFirmwareFlash(checksum){
@@ -234,21 +232,25 @@ function sendFirmwareFlash(checksum){
 }
 
 function sendProgramRun(){
-    console.log("sending sysex run command");
-    var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_OMNI_DEVICE, 
-           OpenWareMidiSysexCommand.SYSEX_FIRMWARE_RUN, 0xf7 ];
-    HoxtonOwl.midiClient.logMidiData(msg);
-    if(HoxtonOwl.midiClient.midiOutput)
-        HoxtonOwl.midiClient.midiOutput.send(msg, 0);
+    return new Promise((resolve, reject) => {
+	console.log("sending sysex run command");
+	var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_OMNI_DEVICE, 
+		   OpenWareMidiSysexCommand.SYSEX_FIRMWARE_RUN, 0xf7 ];
+	HoxtonOwl.midiClient.logMidiData(msg);
+	if(HoxtonOwl.midiClient.midiOutput)
+            HoxtonOwl.midiClient.midiOutput.send(msg, 0);
+    });
 }
 
 function sendProgramStore(slot){
-    console.log("sending sysex store ["+slot+"] command");
-    var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_OMNI_DEVICE, 
-               OpenWareMidiSysexCommand.SYSEX_FIRMWARE_STORE, 0, 0, 0, 0, slot, 0xf7 ];
-    HoxtonOwl.midiClient.logMidiData(msg);
-    if(HoxtonOwl.midiClient.midiOutput)
-        HoxtonOwl.midiClient.midiOutput.send(msg, 0);
+    return new Promise((resolve, reject) => {
+	console.log("sending sysex store ["+slot+"] command");
+	var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_OMNI_DEVICE, 
+		   OpenWareMidiSysexCommand.SYSEX_FIRMWARE_STORE, 0, 0, 0, 0, slot, 0xf7 ];
+	HoxtonOwl.midiClient.logMidiData(msg);
+	if(HoxtonOwl.midiClient.midiOutput)
+            HoxtonOwl.midiClient.midiOutput.send(msg, 0);
+    });
 }
 
 function chunkData(data){
@@ -279,7 +281,7 @@ function sendDataChunks(index, chunks, resolve){
     }
 }
 
-function sendProgramData(data){
+function sendProgramData(data, resolve){
     return new Promise( (resolve, reject) => {
         log("Sending data "+data.length+" bytes"); 
         var chunks = chunkData(data);
@@ -287,7 +289,7 @@ function sendProgramData(data){
     });
 }
 
-function sendProgramFromUrl(url){
+function sendProgramFromUrl(url, resolve){
     return new Promise((resolve, reject) => {
         console.log("sending patch from url "+url.substring(0, 64));
         var oReq = new XMLHttpRequest();
@@ -297,9 +299,9 @@ function sendProgramFromUrl(url){
             if(arrayBuffer) {  
                 var data = new Uint8Array(arrayBuffer);
                 resolve(
-                    sendProgramData(data).then(function(){
-			log("Data sent");
-			sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE);
+                    sendProgramData(data, resolve).then(function(){
+			console.log("data sent");
+			resolve && resolve();
                     }, function(err){
                         console.error(err);
                     })

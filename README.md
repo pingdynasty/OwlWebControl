@@ -1,14 +1,14 @@
 # OwlWebControl
-Proof-of-concept Web MIDI HTML5 application for controlling the OWL family of devices, including
+Proof-of-concept Web MIDI HTML applications for controlling the OWL family of devices, including
  * OWL Pedal
  * OWL Modular
  * Alchemist
  * Wizard
  * Magus
+ * Lich
  * BioSignals
  * OWL Rack
  * Noctua
- * Lich
 
 For more information see [www.rebeltech.org](https://www.rebeltech.org).
 
