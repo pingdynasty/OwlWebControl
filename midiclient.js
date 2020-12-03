@@ -85,7 +85,7 @@ HoxtonOwl.midiClient = {
     	    programChange(event.data[1]);
     	    return;
 	case 0xE0:
-	    pitchBend(event.data[0] & 0x0f, event.data[2] | (event.data[2] << 7))
+	    pitchBend(event.data[0] & 0x0f, event.data[1] | (event.data[2] << 7))
 	    return;
         case 0xF0:
       	    systemExclusive(event.data);
