@@ -73,54 +73,55 @@
   <div>
     <h3>Status</h3>
     <p id="ourstatus">Not Connected</p>
-    <p id="patchstatus">&nbsp;</p>
+    <p>Patch loaded: <span id="patchname">&nbsp;</span></p>
+    <p>Module reading: <span id="patchmessage">&nbsp;</span></p>
   </div>
 
   <div>
     <h3>Calibration</h3>
-    <ol>
-      <li>Connect an OWL device (reload page if necessary)</li>
-      <li>Click <i>Load test patch</i></li>
-      <li>Connect the Left output to the Left input, and simultaneously to a voltmeter</li>
-      <li>Press and hold button 1 and copy the value from the multimeter to the <i>Button 1 Voltage</i> box</li>
-      <li>Repeat for Button 2</li>
-      <li>Click Calibrate Output</li>
-      <li>Press and hold button 1 and copy the "High" reading from the module to the <i>Button 1 Sample x1000</i> box</li>
-      <li>Repeat for Button 2, copying the "Low" reading.</li>
-      <li>Click Calibrate Input</li>
-      <li>Click Store</li>
-    </ol>
-    <p>
-      <button type="button" onclick="loadTestPatch();">Load test patch</button>
-      <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(27, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(27, 0);">Button 1</button>
-      <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(28, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(28, 0);">Button 2</button>
-    </p>
-    <form id="calibration">
-      <p>
-	Button 1 Voltage <input name="v1" type="number" step="any"/>V
-      </p>
-      <p>
-	Button 2 Voltage <input name="v2" type="number" step="any"/>V
-      </p>
-      <p>
-	<button onclick="calibrateOut(this.form); return false;">Calibrate Output</button>
-	Offset <input name="out-offset" type="number" step="any"/>
-	Scalar <input name="out-scalar" type="number" step="any"/>
-      </p>
-      <p>
-	Button 1 Sample x1000 <input name="s1" type="number" step="any"/>
-      </p>
-      <p>
-	Button 2 Sample x1000 <input name="s2" type="number" step="any"/>
-      </p>
-      <p>
-	<button onclick="calibrateIn(this.form); return false;">Calibrate Input</button>
-	Offset <input name="in-offset" type="number" step="any"/>
-	Scalar <input name="in-scalar" type="number" step="any"/>
-      </p>
+    <form id="calibration">   
+      <ol>
+	<li>Connect an OWL device (reload page if necessary)</li>
+	<li>Click <button type="button" onclick="loadTestPatch();">Load test patch</button></li>
+	<li>Connect the Left output to the Left input, and simultaneously to a voltmeter. We recommend a three digit voltimeter.</li>
+	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(27, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(27, 0);">Button 1</button> and copy the value from the multimeter to the <i>Button 1 Voltage</i> box</li>
+	<p>
+	  Button 1 Voltage <input name="v1" type="number" step="any"/>V
+	</p>
+	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(28, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(28, 0);">Button 2</button> and copy the value from the multimeter to the <i>Button 2 Voltage</i> box</li>
+	<p>
+	  Button 2 Voltage <input name="v2" type="number" step="any"/>V
+	</p>
+	
+	<li>Click <button onclick="calibrateOut(this.form); return false;">Calibrate Output</button></li>
+	<p>
+	  Offset <input name="out-offset" type="number" step="any"/>
+	  Scalar <input name="out-scalar" type="number" step="any"/>
+	</p>
+	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(27, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(27, 0);">Button 1</button> and copy the "High" reading from the module to the <i>Button 1 Sample</i> box</li>
+	<p>
+	  Button 1 Sample <input name="s1" type="number" step="any"/>
+	</p>
+
+	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(28, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(28, 0);">Button 2</button> and copy the "Low" reading from the module to the <i>Button 2 Sample</i> box.</li>
+	<p>
+	  Button 2 Sample <input name="s2" type="number" step="any"/>
+	</p>
+	<li>Click <button onclick="calibrateIn(this.form); return false;">Calibrate Input</button></li>
+	<p>
+	  Offset <input name="in-offset" type="number" step="any"/>
+	  Scalar <input name="in-scalar" type="number" step="any"/>
+	</p>
+	<li>Click <button onclick="HoxtonOwl.midiClient.sendPc(1); HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store Settings</button></li>
+      </ol>
     </form>
-    <p>Module reading: <span id="patchmessage">&nbsp;</span></p>
-    <button onclick="HoxtonOwl.midiClient.sendPc(1); HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store</button>
+    <p>
+      The module is now calibrated and the settings are stored in memory. You can test the calibration with a V/oct voltage source and Harmonic Oscillator patch or any other patch with a V/Oct input.
+    </p>    
+  </div>
+
+  <div>
+    <h3></h3>
   </div>
 
   <div>
