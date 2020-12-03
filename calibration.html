@@ -83,14 +83,14 @@
       <ol>
 	<li>Connect an OWL device (reload page if necessary)</li>
 	<li>Click <button type="button" onclick="loadTestPatch();">Load test patch</button></li>
-	<li>Connect the Left output to the Left input, and simultaneously to a voltmeter. We recommend a three digit voltimeter.</li>
-	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(27, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(27, 0);">Button 1</button> and copy the value from the multimeter to the <i>Button 1 Voltage</i> box</li>
+	<li>Connect the Left output to the Left input, and simultaneously to a voltmeter. We recommend a three digit voltimeter</li>
+	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(27, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(27, 0);">Button 1</button> and copy the value from the multimeter to the <i>High Voltage</i> box</li>
 	<p>
-	  Button 1 Voltage <input name="v1" type="number" step="any"/>V
+	  High Voltage <input name="v1" type="number" step="any"/> Volt
 	</p>
-	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(28, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(28, 0);">Button 2</button> and copy the value from the multimeter to the <i>Button 2 Voltage</i> box</li>
+	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(28, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(28, 0);">Button 2</button> and copy the value from the multimeter to the <i>Low Voltage</i> box</li>
 	<p>
-	  Button 2 Voltage <input name="v2" type="number" step="any"/>V
+	  Low Voltage <input name="v2" type="number" step="any"/> Volt
 	</p>
 	
 	<li>Click <button onclick="calibrateOut(this.form); return false;">Calibrate Output</button></li>
@@ -98,20 +98,24 @@
 	  Offset <input name="out-offset" type="number" step="any"/>
 	  Scalar <input name="out-scalar" type="number" step="any"/>
 	</p>
-	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(27, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(27, 0);">Button 1</button> and copy the "High" reading from the module to the <i>Button 1 Sample</i> box</li>
+	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(27, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(27, 0);">Button 1</button> to copy the "High" reading from the module to the <i>High Sample</i> box</li>
 	<p>
-	  Button 1 Sample <input name="s1" type="number" step="any"/>
+	  High Sample <input id="sample-high" name="s1" type="number" step="any"/>
 	</p>
 
-	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(28, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(28, 0);">Button 2</button> and copy the "Low" reading from the module to the <i>Button 2 Sample</i> box.</li>
+	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(28, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(28, 0);">Button 2</button> to copy the "Low" reading from the module to the <i>Low Sample</i> box</li>
 	<p>
-	  Button 2 Sample <input name="s2" type="number" step="any"/>
+	  Low Sample <input id="sample-low" name="s2" type="number" step="any"/>
 	</p>
 	<li>Click <button onclick="calibrateIn(this.form); return false;">Calibrate Input</button></li>
 	<p>
 	  Offset <input name="in-offset" type="number" step="any"/>
 	  Scalar <input name="in-scalar" type="number" step="any"/>
 	</p>
+	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(29, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(29, 0);">Test High</button> and verify that both Module and voltmeter readings are very near +5Volt</li>
+	<p>Module High reading: <input id="test-high">&nbsp;</input> Volt</p>
+	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(30, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(30, 0);">Test Low</button> and verify that both Module and voltmeter readings are very near -5 Volt</li>
+	<p>Module High reading: <input id="test-low">&nbsp;</input> Volt</p>
 	<li>Click <button onclick="HoxtonOwl.midiClient.sendPc(1); HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store Settings</button></li>
       </ol>
     </form>
