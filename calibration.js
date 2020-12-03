@@ -31,6 +31,8 @@ function systemExclusive(data){
             var name = getStringFromSysex(data, 5, 1);
 	    var idx = data[4];
 	    log("Preset "+idx+": "+name);
+	    if(idx == 0)
+		$("#patchname").text(name);
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PARAMETER_NAME_COMMAND:
             var name = getStringFromSysex(data, 5, 1);
