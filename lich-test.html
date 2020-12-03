@@ -147,41 +147,6 @@
   </div>
 
   <div>
-    <h3>Calibration</h3>
-    <p>
-      <button type="button" onclick="sendProgramFromUrl('https://www.rebeltech.org/api/builds/5fb33858c4b91d679aecd9b9?format=sysx&amp;download=1').then(function(){ sendProgramRun(); }, function(err){ console.error(err); });">Load test patch</button>
-      <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(27, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(27, 0);">Button 1</button>
-      <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(28, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(28, 0);">Button 2</button>
-    </p>
-    <form id="calibration">
-      <p>
-	Button 1 Voltage <input name="v1" type="number" step="any"/>V
-      </p>
-      <p>
-	Button 2 Voltage <input name="v2" type="number" step="any"/>V
-      </p>
-      <p>
-	<button onclick="calibrateOut(this.form); return false;">Calibrate Output</button>
-	Offset <input name="out-offset" type="number" step="any"/>
-	Scalar <input name="out-scalar" type="number" step="any"/>
-      </p>
-      <p>
-	Button 1 Sample x1000 <input name="s1" type="number" step="any"/>
-      </p>
-      <p>
-	Button 2 Sample x1000 <input name="s2" type="number" step="any"/>
-      </p>
-      <p>
-	<button onclick="calibrateIn(this.form); return false;">Calibrate Input</button>
-	Offset <input name="in-offset" type="number" step="any"/>
-	Scalar <input name="in-scalar" type="number" step="any"/>
-      </p>
-    </form>
-    <p>Module reading: <span id="patchmessage">&nbsp;</span></p>
-    <button onclick="sendPc(1); HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store</button>
-  </div>
-
-  <div>
     <h3>Messages</h3>
     <button id="clear">Clear</button>
     <ul id="log"></ul>
