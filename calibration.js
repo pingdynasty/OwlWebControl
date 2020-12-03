@@ -53,7 +53,6 @@ function systemExclusive(data){
 	    // log("Message: "+msg);
 	    $("#patchmessage").text(msg);
 	    var str = msg.split(':');
-	    log("str ["+str[0]+"]["+str[1]+"]");
 	    if(str[0] == 'Sample High')
 		$("#sample-high").val(parseFloat(str[1]));
 	    else if(str[0] == 'Sample Low')

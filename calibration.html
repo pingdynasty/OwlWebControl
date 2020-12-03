@@ -78,7 +78,7 @@
   </div>
 
   <div>
-    <h3>Calibration</h3>
+    <h3>Calibrate</h3>
     <form id="calibration">   
       <ol>
 	<li>Connect an OWL device (reload page if necessary)</li>
@@ -93,42 +93,40 @@
 	  Low Voltage <input name="v2" type="number" step="any"/> Volt
 	</p>
 	
-	<li>Click <button onclick="calibrateOut(this.form); return false;">Calibrate Output</button></li>
-	<p>
-	  Offset <input name="out-offset" type="number" step="any"/>
-	  Scalar <input name="out-scalar" type="number" step="any"/>
-	</p>
-	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(27, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(27, 0);">Button 1</button> to copy the "High" reading from the module to the <i>High Sample</i> box</li>
-	<p>
-	  High Sample <input id="sample-high" name="s1" type="number" step="any"/>
-	</p>
+	<li>Click <button onclick="calibrateOut(this.form); calibrateIn(this.form); return false;">Calibrate</button></li>
+	<input id="sample-high" name="s1" type="number" step="any" hidden="true"/>
+	<input id="sample-low" name="s2" type="number" step="any" hidden="true"/>
 
-	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(28, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(28, 0);">Button 2</button> to copy the "Low" reading from the module to the <i>Low Sample</i> box</li>
 	<p>
-	  Low Sample <input id="sample-low" name="s2" type="number" step="any"/>
+	  Output Offset <input name="out-offset" type="number" step="any"/>
+	  Output Scalar <input name="out-scalar" type="number" step="any"/>
 	</p>
-	<li>Click <button onclick="calibrateIn(this.form); return false;">Calibrate Input</button></li>
 	<p>
-	  Offset <input name="in-offset" type="number" step="any"/>
-	  Scalar <input name="in-scalar" type="number" step="any"/>
+	  Input Offset <input name="in-offset" type="number" step="any"/>
+	  Input Scalar <input name="in-scalar" type="number" step="any"/>
 	</p>
-	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(29, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(29, 0);">Test High</button> and verify that both Module and voltmeter readings are very near +5Volt</li>
-	<p>Module High reading: <input id="test-high">&nbsp;</input> Volt</p>
-	<li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(30, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(30, 0);">Test Low</button> and verify that both Module and voltmeter readings are very near -5 Volt</li>
-	<p>Module High reading: <input id="test-low">&nbsp;</input> Volt</p>
-	<li>Click <button onclick="HoxtonOwl.midiClient.sendPc(1); HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store Settings</button></li>
+		<li>Click <button onclick="HoxtonOwl.midiClient.sendPc(1); HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store Settings</button></li>
       </ol>
     </form>
     <p>
-      The module is now calibrated and the settings are stored in memory. You can test the calibration with a V/oct voltage source and Harmonic Oscillator patch or any other patch with a V/Oct input.
+      The module is now calibrated and the settings are stored in memory. You can test the calibration with a V/oct voltage source and Harmonic Oscillator patch or another patch with a V/Oct input and output such as MIDI Modular
     </p>    
   </div>
 
   <div>
-    <h3></h3>
+    <h3>Test Calibration</h3>
+    <ol>
+      <li>Connect an OWL device (reload page if necessary)</li>
+      <li>Click <button type="button" onclick="loadTestPatch();">Load test patch</button></li>
+      <li>Connect the Left output to the Left input, and simultaneously to a voltmeter. We recommend a three digit voltimeter</li>
+      <li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(29, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(29, 0);">Test High</button> and verify that both Module and voltmeter readings are near +5 Volt</li>
+      <p>Module High reading: <input id="test-high">&nbsp;</input> Volt</p>
+      <li>Press and hold <button type="button" onmousedown="HoxtonOwl.midiClient.sendCc(30, 127);" onmouseup="HoxtonOwl.midiClient.sendCc(30, 0);">Test Low</button> and verify that both Module and voltmeter readings are near -5 Volt</li>
+      <p>Module Low reading: <input id="test-low">&nbsp;</input> Volt</p>
+    </ol>
   </div>
 
-  <div>
+  <div hidden="true">
     <h3>Query</h3>
     <p>MIDI In
       <select id="midiInputs" onchange="HoxtonOwl.midiClient.selectMidiInput(this.value)">
