@@ -100,6 +100,30 @@ $(document).ready(function() {
 		HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_BUTTON, data.press*127);
 	    console.log(data);
 	});
+	b1.sendsTo(function(data){
+	    if(data.press != undefined)
+		HoxtonOwl.midiClient.sendCc(data.press ? OpenWareMidiControl.PATCH_BUTTON_ON :
+					    OpenWareMidiControl.PATCH_BUTTON_OFF, 4);
+	    console.log(data);
+	});
+	b2.sendsTo(function(data){
+	    if(data.press != undefined)
+		HoxtonOwl.midiClient.sendCc(data.press ? OpenWareMidiControl.PATCH_BUTTON_ON :
+					    OpenWareMidiControl.PATCH_BUTTON_OFF, 5);
+	    console.log(data);
+	});
+	b3.sendsTo(function(data){
+	    if(data.press != undefined)
+		HoxtonOwl.midiClient.sendCc(data.press ? OpenWareMidiControl.PATCH_BUTTON_ON :
+					    OpenWareMidiControl.PATCH_BUTTON_OFF, 6);
+	    console.log(data);
+	});
+	b4.sendsTo(function(data){
+	    if(data.press != undefined)
+		HoxtonOwl.midiClient.sendCc(data.press ? OpenWareMidiControl.PATCH_BUTTON_ON :
+					    OpenWareMidiControl.PATCH_BUTTON_OFF, 7);
+	    console.log(data);
+	});
 	// rc.sendsTo(function(data){
 	//     HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_CONTROL, data.value*127);
 	//     console.log(data);

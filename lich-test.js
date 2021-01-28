@@ -32,6 +32,11 @@ function systemExclusive(data){
 	    var idx = data[4];
 	    log("Preset "+idx+": "+name);
 	    break;
+	case OpenWareMidiSysexCommand.SYSEX_RESOURCE_NAME_COMMAND:
+            var name = getStringFromSysex(data, 5, 1);
+	    var idx = data[4];
+	    log("resource "+idx+": "+name);
+	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PARAMETER_NAME_COMMAND:
             var name = getStringFromSysex(data, 5, 1);
 	    var idx = data[4];
@@ -70,7 +75,7 @@ function systemExclusive(data){
 	    break;	    
 	default:
             var msg = getStringFromSysex(data, 4, 1);
-	    log("Unhandled message: "+msg);
+	    log("Unhandled message["+data[3]+"]: "+msg);
 	    break;
 	}
     }
