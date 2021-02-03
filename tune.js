@@ -112,8 +112,11 @@ $(document).ready(function() {
 		    HoxtonOwl.midiClient.sendCc(data.press ? OpenWareMidiControl.PATCH_BUTTON_ON :
 						OpenWareMidiControl.PATCH_BUTTON_OFF, 7);
 	    });
-	    keyboard.octaves = 6;
-	    keyboard.mode = "sustain";
+	    keyboard.octaves = 8.9;
+	    keyboard.midibase = 21;
+	    keyboard.init();
+	    keyboard.resize(800, 75);
+	    // keyboard.mode = "sustain";
 	    keyboard.sendsTo(function(data){
 		// there's a bug in keyboard that sends out velocity up to 128
 		HoxtonOwl.midiClient.sendNoteOn(data.note, Math.min(data.on, 127));
