@@ -112,6 +112,11 @@ $(document).ready(function() {
 		    HoxtonOwl.midiClient.sendCc(data.press ? OpenWareMidiControl.PATCH_BUTTON_ON :
 						OpenWareMidiControl.PATCH_BUTTON_OFF, 7);
 	    });
+	    b5.sendsTo(function(data){
+		if(data.press != undefined)
+		    HoxtonOwl.midiClient.sendCc(data.press ? OpenWareMidiControl.PATCH_BUTTON_ON :
+						OpenWareMidiControl.PATCH_BUTTON_OFF, 8);
+	    });
 	    keyboard.octaves = 8.9;
 	    keyboard.midibase = 21;
 	    keyboard.init();
