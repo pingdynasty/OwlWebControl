@@ -80,6 +80,7 @@ function systemExclusive(data) {
 	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_ERROR:
             var msg = getStringFromSysex(data, 4, 1);
 	    console.log("program error "+msg);
+	    $("#patchstatus").text(msg);
 	    log("Error: "+msg);
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_DEVICE_STATS:

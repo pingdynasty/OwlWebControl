@@ -35,7 +35,7 @@ function systemExclusive(data){
 	case OpenWareMidiSysexCommand.SYSEX_RESOURCE_NAME_COMMAND:
             var name = getStringFromSysex(data, 5, 1);
 	    var idx = data[4];
-	    log("resource "+idx+": "+name);
+	    log("Resource "+idx+": "+name);
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PARAMETER_NAME_COMMAND:
             var name = getStringFromSysex(data, 5, 1);
