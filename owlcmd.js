@@ -122,7 +122,7 @@ function setParameter(pid, value){
 }
 
 function resetParameterNames(){
-    for(i=1; i<=8; ++i)
+    for(var i=1; i<=8; ++i)
         $("#p"+i).text(String.fromCharCode(64+i)); // reset the prototype slider names
 }
 
@@ -198,6 +198,118 @@ function setMonitor(poll){
     }
 }
 
+var makeCRCTable = function(){
+    var c;
+    var crcTable = [];
+    for(var n =0; n < 256; n++){
+        c = n;
+        for(var k =0; k < 8; k++){
+            c = ((c&1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
+        }
+        crcTable[n] = c;
+    }
+    return crcTable;
+}
+
+var crc32 = function(str) {
+    var crcTable = window.crcTable || (window.crcTable = makeCRCTable());
+    var crc = 0 ^ (-1);
+    for (var i = 0; i < str.length; i++ ) {
+        crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xFF];
+    }
+    return (crc ^ (-1)) >>> 0;
+};
+
+function encodeInt(x){
+    // var b = [ ((x&0x80000000)?8:0) | ((x&0x800000)?4:0) | ((x&0x8000)?2:0) | ((x&0x80)?1:0),
+    // 	      (x>>24) & 0x7f, (x>>16) & 0x7f, (x>>8) & 0x7f, (x>>0) & 0x7f];
+    var b = [ ((x&0x80000000)?1:0) | ((x&0x800000)?2:0) | ((x&0x8000)?4:0) | ((x&0x80)?8:0),
+	      (x>>24) & 0x7f, (x>>16) & 0x7f, (x>>8) & 0x7f, (x>>0) & 0x7f];
+    return b;
+}
+
+function encodeSysexData(data){
+    console.log("encoding "+data.length+" bytes");
+    var sysex = [];
+    var cnt = 0;
+    var cnt7 = 0;
+    var pos = 0;
+    sysex[0] = 0;
+    for(cnt = 0; cnt < data.length; cnt++) {
+	var c = data.charCodeAt(cnt) & 0x7F;
+	var msb = data.charCodeAt(cnt) >> 7;
+	sysex[pos] |= msb << cnt7;
+	sysex[pos + 1 + cnt7] = c;
+	if(cnt7++ == 6) {
+	    pos += 8;
+	    sysex[pos] = 0;
+	    cnt7 = 0;
+	}
+    }
+    return sysex;
+}
+
+function packageSysexData(raw){
+    var data = encodeSysexData(raw);
+    // returns array of Sysex messages 
+    var chunks = [];
+    var i = 0;
+    // all messages must have message index
+    // first message contains data length
+    var packageIndex = 0;
+    var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_OMNI_DEVICE, OpenWareMidiSysexCommand.SYSEX_FIRMWARE_UPLOAD];
+    msg = msg.concat(encodeInt(packageIndex++));
+    msg = msg.concat(encodeInt(raw.length));
+    msg.push(0xf7);
+    chunks.push(msg);
+    while(i < data.length){
+	msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_OMNI_DEVICE, OpenWareMidiSysexCommand.SYSEX_FIRMWARE_UPLOAD];
+	msg = msg.concat(encodeInt(packageIndex++));
+	var j = msg.length;
+	for(; j<249 && i<data.length; ++j)
+	    msg[j] = data[i++];
+	msg[j] = 0xf7;
+	chunks.push(msg);
+    }
+    // add CRC message
+    msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_OMNI_DEVICE, OpenWareMidiSysexCommand.SYSEX_FIRMWARE_UPLOAD];
+    msg = msg.concat(encodeInt(packageIndex++));
+    var checksum = crc32(raw);
+    console.log("Checksum: "+checksum);
+    msg = msg.concat(encodeInt(checksum));
+    msg.push(0xf7);
+    chunks.push(msg);
+    return chunks;
+}
+
+function saveResource(name, files){
+    console.log("sending resource "+name);
+    sendResource(files).then(function(){
+	console.log("saving resource "+name);
+	sendResourceSave(name);
+	log("Saved resource "+name);
+	sendRequest(OpenWareMidiSysexCommand.SYSEX_RESOURCE_NAME_COMMAND);
+    }, function(err){ console.error(err); });
+}
+
+function sendResource(files, resolve){
+    return new Promise((resolve, reject) => {
+	for (var i = 0, len = files.length; i < len; i++) {
+            var f = files[i];
+	    var reader = new FileReader();
+	    reader.onload = (function(theFile) {
+		return function(e) {
+		    console.log("Read resource "+theFile.name);
+		    var chunks = packageSysexData(e.target.result);
+		    sendDataChunks(0, chunks, resolve);
+		};
+	    })(f);
+	    // reader.readAsDataURL(f);
+	    reader.readAsBinaryString(f);
+	}	
+    });
+}
+
 function sendProgram(files, resolve){
     return new Promise((resolve, reject) => {
 	for (var i = 0, f; f = files[i]; i++) {
@@ -224,11 +336,7 @@ function sendProgram(files, resolve){
 function sendFirmwareFlash(checksum){
     var crc = parseInt(checksum, 16);
     console.log("sending firmware flash ["+checksum+":"+crc+"] command");
-    var b = [ ((crc&0x80000000)?8:0) | ((crc&0x800000)?4:0) | ((crc&0x8000)?2:0) | ((crc&0x80)?1:0),
-	      (crc>>24) & 0x7f, 
-	      (crc>>16) & 0x7f, 
-	      (crc>>8) & 0x7f, 
-	      (crc>>0) & 0x7f];
+    var b = encodeInt(crc);
     console.log("bytes ["+b+"] command");
     var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_OMNI_DEVICE, 
                OpenWareMidiSysexCommand.SYSEX_FIRMWARE_FLASH, b[0], b[1], b[2], b[3], b[4], 0xf7 ];
@@ -246,6 +354,21 @@ function sendProgramRun(){
 	if(HoxtonOwl.midiClient.midiOutput)
             HoxtonOwl.midiClient.midiOutput.send(msg, 0);
     });
+}
+
+function sendResourceSave(name){
+    return new Promise((resolve, reject) => {
+	console.log("sending sysex save ["+name+"] command");
+	var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_OMNI_DEVICE, 
+		   OpenWareMidiSysexCommand.SYSEX_FIRMWARE_SAVE];
+	for(var i=0; i<name.length; ++i)
+	    msg.push(name.charCodeAt(i));
+	msg.push(0x00);
+	msg.push(0xf7);
+	HoxtonOwl.midiClient.logMidiData(msg);
+	if(HoxtonOwl.midiClient.midiOutput)
+            HoxtonOwl.midiClient.midiOutput.send(msg, 0);
+    });    
 }
 
 function sendProgramStore(slot){

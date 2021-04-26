@@ -87,6 +87,17 @@
       <li><button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_DEVICE_RESET_COMMAND);"> Device Reset</button></li>
       <li>Done! Maybe visit the <a href="https://www.rebeltech.org/patch-library/device/">Patch Library</a>?</li>
   </div>
+  
+  <div>
+    <h3>Send Resource</h3>
+    <ol>
+      <form>
+	<ol><input type="text" name="name" value="sample1.wav"/></ol>	  
+	<ol><input type="file" name="files[]" multiple="false" accept=".wav"/></ol>	  
+	<ol><button type="button" onclick="saveResource(this.form[0].value, this.form[1].files)">Save Resource</button></ol>
+      </form>
+    </ol>
+  </div>
 
   <div>
     <h3>Query</h3>
