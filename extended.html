@@ -163,8 +163,17 @@
   </p>
 -->
 
-<p>
+  <form>
+    <p>Message:</p>
+    <!-- <input id="program_message" type="text"/> -->
+    <textarea id="program_message"></textarea>
+    <button onclick="sendMessage(document.getElementById('program_message').value); return false;">Send</button>
+  </form>
+
+  <p>
   <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);"> Erase Flash Storage</button>
+
+  
   <!-- <button onclick="HoxtonOwl.midiClient.sendSysexData(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE, [0, 0, 0, 0, 4]);"> Erase Sector 4</button> -->
   <button onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_ID);">Request Device ID</button>
   <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_DEVICE_RESET_COMMAND);"> Device Reset</button>

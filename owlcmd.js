@@ -59,6 +59,14 @@ function systemExclusive(data) {
 	    console.log("device id "+msg);
 	    log("Unique Device ID: "+msg);
 	    break;
+	case OpenWareMidiSysexCommand.SYSEX_FIRMWARE_UPLOAD:
+	    var index = decodeInt(data.slice(4, 5));
+	    log("Resource sequence: "+index);
+	    if(index == 0){
+		var size = decodeInt(data.slice(9, 5));
+		log("Resource size: "+size);
+	    }
+	    break;
 	case OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION:
             var msg = getStringFromSysex(data, 4, 1);
 	    console.log("firmware "+msg);
@@ -87,10 +95,9 @@ function systemExclusive(data) {
             var msg = getStringFromSysex(data, 4, 1);
 	    console.log("device stats "+msg);
 	    log("Device Stats: "+msg);
-	    break;	    
+	    break;
 	default:
-            var msg = getStringFromSysex(data, 4, 1);
-	    log("Unhandled message["+data[3]+"]: "+msg);
+	    log("Unhandled message["+data[3]+", "+data.length+"]: "+data);
 	    break;
 	}
     }
@@ -220,9 +227,21 @@ var crc32 = function(str) {
     return (crc ^ (-1)) >>> 0;
 };
 
+function decodeInt(x){
+    console.log("data: "+x);
+    var msb = x[0];
+    var y = x[1] << 24;
+    y += x[2] << 16;
+    y += x[3] << 8;
+    y += x[4] << 0;
+    y += (msb & 0x01) ? 0x80000000 : 0;
+    y += (msb & 0x02) ? 0x800000 : 0;
+    y += (msb & 0x04) ? 0x8000 : 0;
+    y += (msb & 0x08) ? 0x80 : 0;
+    return y;
+}
+
 function encodeInt(x){
-    // var b = [ ((x&0x80000000)?8:0) | ((x&0x800000)?4:0) | ((x&0x8000)?2:0) | ((x&0x80)?1:0),
-    // 	      (x>>24) & 0x7f, (x>>16) & 0x7f, (x>>8) & 0x7f, (x>>0) & 0x7f];
     var b = [ ((x&0x80000000)?1:0) | ((x&0x800000)?2:0) | ((x&0x8000)?4:0) | ((x&0x80)?8:0),
 	      (x>>24) & 0x7f, (x>>16) & 0x7f, (x>>8) & 0x7f, (x>>0) & 0x7f];
     return b;
@@ -290,6 +309,24 @@ function saveResource(name, files){
 	log("Saved resource "+name);
 	sendRequest(OpenWareMidiSysexCommand.SYSEX_RESOURCE_NAME_COMMAND);
     }, function(err){ console.error(err); });
+}
+
+function eraseResource(slot){
+    log("Erasing resource "+slot);
+    var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_OMNI_DEVICE, OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE];
+    msg = msg.concat(encodeInt(slot));
+    msg.push(0xf7);
+    if(HoxtonOwl.midiClient.midiOutput)
+        HoxtonOwl.midiClient.midiOutput.send(msg, 0);            
+}
+
+function requestResource(slot){
+    log("Requesting resource "+slot);
+    var msg = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_OMNI_DEVICE, OpenWareMidiSysexCommand.SYSEX_FIRMWARE_SEND];
+    msg = msg.concat(encodeInt(slot));
+    msg.push(0xf7);
+    if(HoxtonOwl.midiClient.midiOutput)
+        HoxtonOwl.midiClient.midiOutput.send(msg, 0);
 }
 
 function sendResource(files, resolve){

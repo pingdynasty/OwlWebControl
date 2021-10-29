@@ -59,6 +59,16 @@ function selectPatch(idx){
     HoxtonOwl.midiClient.sendPc(idx);    
 }
 
+function sendMessage(msg){
+    log("sending message: "+msg+".");
+    var data = [0xf0, MIDI_SYSEX_MANUFACTURER, MIDI_SYSEX_OMNI_DEVICE, OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE];
+    for(i=0; i<msg.length; ++i)
+	data.push(msg.charCodeAt(i) & 0x7f)
+    data.push(0xf7);
+    if(HoxtonOwl.midiClient.midiOutput)
+        HoxtonOwl.midiClient.midiOutput.send(data, 0);
+}
+
 $(document).ready(function() {
 
     $('#clear').on('click', function() {
@@ -138,6 +148,10 @@ $(document).ready(function() {
 	    var key = parseInt(Object.keys(data)[0]);
 	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_BA+key, data[key]*127);
 	});
+	keyboard.octaves = 10;
+	keyboard.midibase = 0;
+	keyboard.init();
+	keyboard.resize(800, 75);
 	keyboard.mode = "sustain";
 	keyboard.sendsTo(function(data){
 	    // there's a bug in keyboard that sends out velocity up to 128
