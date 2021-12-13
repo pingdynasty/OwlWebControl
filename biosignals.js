@@ -143,10 +143,21 @@ $(document).ready(function() {
 
     $('#scope').on('click', function() {
 	var context = new window.AudioContext()
+	// if (context.state === 'suspended') {
+	//     await context.resume();
+	// SyntaxError: await is only valid in async functions and the top level bodies of modules
+	// }
 	myOscilloscope = new WavyJones(context, 'oscilloscope');
 	// get user microphone
-	var constraints = { video: false, audio: true };
-	navigator.getUserMedia(constraints, function(stream) {
+	var constraints = { video: false,
+			    audio: {
+				echoCancellation: false,
+				autoGainControl: false,
+				noiseSuppression: false,
+				latency: 0
+			    }
+			  };
+	navigator.mediaDevices.getUserMedia(constraints, function(stream) {
 	    var source = context.createMediaStreamSource(stream);
 	    source.connect(myOscilloscope);
 	    // myOscilloscope.connect(context.destination);
