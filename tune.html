@@ -16,7 +16,7 @@
   <script>
     function loadTestPatch(){
 	HoxtonOwl.midiClient.sendCc(7, 127); // set max volume
-	sendProgramFromUrl('https://www.rebeltech.org/api/builds/5fb33858c4b91d679aecd9b9?format=sysx&amp;download=1')
+	sendProgramFromUrl('https://www.rebeltech.org/api/builds/5fb33858c4b91d679aecd9b9?format=sysex&amp;download=1')
 	    .then(function(){ sendProgramRun(); }, function(err){ console.error(err); });			    
     }
     function setButton(bid, ison){
