@@ -148,6 +148,16 @@ $(document).ready(function() {
 	    var key = parseInt(Object.keys(data)[0]);
 	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_BA+key, data[key]*127);
 	});
+	sliders3.setNumberOfSliders(8);
+	sliders3.sendsTo(function(data){
+	    var key = parseInt(Object.keys(data)[0]);
+	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_CA+key, data[key]*127);
+	});
+	sliders4.setNumberOfSliders(8);
+	sliders4.sendsTo(function(data){
+	    var key = parseInt(Object.keys(data)[0]);
+	    HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_DA+key, data[key]*127);
+	});
 	keyboard.octaves = 10;
 	keyboard.midibase = 0;
 	keyboard.init();
