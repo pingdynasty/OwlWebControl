@@ -73,6 +73,11 @@ function systemExclusive(data) {
 	    log("Firmware version: "+msg);
 	    $("#ourstatus").text("Connected to "+msg);	    
 	    break;
+	case OpenWareMidiSysexCommand.SYSEX_BOOTLOADER_VERSION:
+            var msg = getStringFromSysex(data, 4, 1);
+	    console.log("bootloader "+msg);
+	    log("Bootloader version: "+msg);
+	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE:
             var msg = getStringFromSysex(data, 4, 1);
 	    console.log("program message "+msg);

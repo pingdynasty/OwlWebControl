@@ -145,8 +145,11 @@
     led <input type="button" onclick="sendRequest(OpenWareMidiControl.LED); return false;"/>
     message <input type="button" onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE); return false;"/>
     device id <input type="button" onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_ID); return false;"/>
-    version <input type="button" onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION); return false;"/>
+    firmware <input type="button" onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION); return false;"/>
+    bootloader <input type="button" onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_BOOTLOADER_VERSION); return false;"/>
     settings <input type="button" onclick="sendRequest(127); return false;"/>
+    device stats  <input type="button" onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_STATS); return false;"/>
+    program stats  <input type="button" onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_PROGRAM_STATS); return false;"/>
     parameter values <input type="button" onclick="sendRequest(OpenWareMidiControl.PATCH_PARAMETER_A); return false;"/>
   </div>
 
