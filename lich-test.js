@@ -30,12 +30,16 @@ function systemExclusive(data){
 	case OpenWareMidiSysexCommand.SYSEX_PRESET_NAME_COMMAND:
             var name = getStringFromSysex(data, 5, 1);
 	    var idx = data[4];
-	    log("Preset "+idx+": "+name);
+	    var size = data.length > 5+6+name.length ? decodeInt(data.slice(6+name.length)) : 0;
+	    var crc = data.length > 5+5+6+name.length ? decodeInt(data.slice(5+6+name.length)) : 0;
+	    log("Preset "+idx+": "+name+" ["+size+"][0x"+crc.toString(16)+"]");
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_RESOURCE_NAME_COMMAND:
             var name = getStringFromSysex(data, 5, 1);
 	    var idx = data[4];
-	    log("Resource "+idx+": "+name);
+	    var size = data.length > 5+6+name.length ? decodeInt(data.slice(6+name.length)) : 0;
+	    var crc = data.length > 5+5+6+name.length ? decodeInt(data.slice(5+6+name.length)) : 0;
+	    log("Resource "+idx+": "+name+" ["+size+"][0x"+crc.toString(16)+"]");
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PARAMETER_NAME_COMMAND:
             var name = getStringFromSysex(data, 5, 1);
@@ -46,6 +50,15 @@ function systemExclusive(data){
             var msg = getStringFromSysex(data, 4, 1);
 	    log("Unique Device ID: "+msg);
 	    break;
+	case OpenWareMidiSysexCommand.SYSEX_FIRMWARE_UPLOAD:
+	    var index = decodeInt(data.slice(4, 9));
+	    // log("Resource sequence: "+index+": "+data);
+	    log("Resource sequence: "+index);
+	    if(index == 0){
+		var size = decodeInt(data.slice(9, 14));
+		log("Resource size: "+size);
+	    }
+	    break;
 	case OpenWareMidiSysexCommand.SYSEX_FIRMWARE_VERSION:
             var msg = getStringFromSysex(data, 4, 1);
 	    log("Firmware: "+msg);
@@ -53,7 +66,6 @@ function systemExclusive(data){
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_MESSAGE:
             var msg = getStringFromSysex(data, 4, 1);
-	    // log("Message: "+msg);
 	    $("#patchmessage").text(msg);
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PROGRAM_STATS:
@@ -74,8 +86,7 @@ function systemExclusive(data){
 	    handleSetting(msg.substring(0, 2), msg.substring(2));
 	    break;	    
 	default:
-            var msg = getStringFromSysex(data, 4, 1);
-	    log("Unhandled message["+data[3]+"]: "+msg);
+	    log("Unhandled message["+data[3]+", "+data.length+"]: "+data);
 	    break;
 	}
     }
