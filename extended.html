@@ -153,6 +153,20 @@
     parameter values <input type="button" onclick="sendRequest(OpenWareMidiControl.PATCH_PARAMETER_A); return false;"/>
   </div>
 
+  <div>
+    <h3>Settings</h3>
+    <p>Set Configuration:
+      <form>
+    	<input name="key" type="text"/>
+    	<input name="value" type="text"/>
+    	<button type="button" onclick="HoxtonOwl.midiClient.sendSysexString(OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, this.form[0].value+parseInt(this.form[1].value).toString(16))">Send</button>
+      </form>
+    </p>
+    <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store</button>
+    <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_RESET); return false;">Reset</button>
+    <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);"> Erase</button>
+  </div>
+
 <!--
 
   <p>MIDI In
@@ -168,22 +182,24 @@
   </p>
 -->
 
+  <div>
+    <h3>Messages</h3>
   <form>
-    <p>Message:</p>
     <!-- <input id="program_message" type="text"/> -->
     <textarea id="program_message"></textarea>
     <button onclick="sendMessage(document.getElementById('program_message').value); return false;">Send</button>
   </form>
+  </div>
 
-  <p>
+
+  <div>
+    <h3>Actions</h3>
   <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);"> Erase Flash Storage</button>
-
-  
   <!-- <button onclick="HoxtonOwl.midiClient.sendSysexData(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE, [0, 0, 0, 0, 4]);"> Erase Sector 4</button> -->
   <button onclick="sendRequest(OpenWareMidiSysexCommand.SYSEX_DEVICE_ID);">Request Device ID</button>
   <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_DEVICE_RESET_COMMAND);"> Device Reset</button>
   <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_BOOTLOADER_COMMAND);"> Reset to Boot Loader</button>
-</p>
+</div>
 
   <div>
     <h3>Messages</h3>
