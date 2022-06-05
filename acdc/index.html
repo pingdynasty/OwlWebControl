@@ -27,7 +27,7 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-        <!-- Content Wrapper -->
+    <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
       <!-- Main Content -->
@@ -36,93 +36,67 @@
         <!-- Topbar -->
         <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-    <!-- Topbar Navbar -->
-  <ul class="navbar-nav ml-auto">
-    <li class="nav-item">
-      <p id="patcherror">&nbsp;</p>
-    </li>
-    <div class="topbar-divider d-none d-sm-block"></div>
-    <li class="nav-item">
-      <p id="patchmessage">&nbsp;</p>
-    </li>
-    <div class="topbar-divider d-none d-sm-block"></div>
-    <li class="nav-item">
-      <p id="ourstatus">Not Connected</p>
-    </li>
-  </ul>
-          </nav>
+	  <!-- Topbar Navbar -->
+	  <ul class="navbar-nav ml-auto">
+	    <li class="nav-item">
+	      <p id="patcherror">&nbsp;</p>
+	    </li>
+	    <div class="topbar-divider d-none d-sm-block"></div>
+	    <li class="nav-item">
+	      <p id="patchmessage">&nbsp;</p>
+	    </li>
+	    <div class="topbar-divider d-none d-sm-block"></div>
+	    <li class="nav-item">
+	      <p id="ourstatus">Not Connected</p>
+	    </li>
+	  </ul>
+        </nav>
         <!-- End of Topbar -->
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
 
-    <div class="container">
-      <h2>Input Offsets</h2>
-      <form>
-      <table class="table">
-	 <thead>
-    <tr>
-      <th scope="col">Channel 1</th>
-      <th scope="col">Channel 2</th>
-      <th scope="col">Channel 3</th>
-      <th scope="col">Channel 4</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-      <input id="offset1" type="number" />
-      </td>	
-      <td>
-      <input id="offset2" type="number" />
-      </td>	
-      <td>
-      <input id="offset3" type="number" />
-      </td>	
-      <td>
-      <input id="offset4" type="number" />
-      </td>
-    </tr>
-  </tbody>
-      </table>
-	<div class="row">      
-	  <button type="button" class="btn btn-light" onclick="storeSettings()">Store Settings</button>
-      </div>
-      </form>
-<!--      
-      <form>
-	<div class="row">
-      <label for="offset1" class="form-label">Offset channel 1</label>
-      <input id="offset1" type="number" />
+	  <div class="container">
+	    <h2>Input Offsets</h2>
+	    <form>
+	      <table class="table">
+		<thead>
+		  <tr>
+		    <th scope="col">Channel 1</th>
+		    <th scope="col">Channel 2</th>
+		    <th scope="col">Channel 3</th>
+		    <th scope="col">Channel 4</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  <tr>
+		    <td>
+		      <input id="offset1" type="number" />
+		    </td>	
+		    <td>
+		      <input id="offset2" type="number" />
+		    </td>	
+		    <td>
+		      <input id="offset3" type="number" />
+		    </td>	
+		    <td>
+		      <input id="offset4" type="number" />
+		    </td>
+		  </tr>
+		</tbody>
+	      </table>
+	      <div class="row">      
+		<button type="button" class="btn btn-light" onclick="loadPatch('TuneACDC')">Load Calibration Patch</button>
+	      </div>
+	      <div class="row">      
+		<button type="button" class="btn btn-light" onclick="storeSettings()">Store Settings</button>
+	      </div>
+	      <div class="row">      
+		<button type="button" class="btn btn-light" onclick="storePatch('ACDC', 1)">Store ACDC Patch</button>
+	    </form>
+	    </div>
+	  </div>
 	</div>
-	<div class="row">
-      <label for="offset2" class="form-label">Offset channel 2</label>
-      <input id="offset2" type="number" />
-	</div>
-	<div class="row">
-      <label for="offset3" class="form-label">Offset channel 3</label>
-      <input id="offset3" type="number" />
-	</div>
-	<div class="row">
-      <label for="offset4" class="form-label">Offset channel 4</label>
-      <input id="offset4" type="number" />
-	</div>
-	<div class="row">      
-	  <label for="storeSettings" class="form-label">Save Settings</label>
-	<button id="storeSettings" type="button" onclick="storeSettings()">Store</button>
-      </div>
-      </form>
-      -->
-    </div>
-  </div>
-      </div>
-
-      <div class="container">
-	<h2>Patches</h2>
-	<div class="row">      
-	  <button type="button" class="btn btn-light" onclick="loadPatch('TuneACDC')">Load Calibration Patch</button>
-	  <button type="button" class="btn btn-light" onclick="storePatch('ACDC', 1)">Store ACDC Patch</button>
-      </div>
 
       </div>
       <!-- End of Main Content -->
@@ -133,7 +107,7 @@
   </div>
   <!-- End of Page Wrapper -->
 
-    <footer class="sticky-footer bg-white">
+  <footer class="sticky-footer bg-white">
     <div class="container my-auto">
       <div class="copyright text-center my-auto">
 	<span>Copyright &copy; Rebel Technology 2022</span>

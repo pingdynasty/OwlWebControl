@@ -150,10 +150,6 @@ function storeSettings(resolve){
 	0x0e, 0xe1, offset2.value & 0x7f, (offset2.value >> 7) & 0x7f, 
 	0x0e, 0xe2, offset3.value & 0x7f, (offset3.value >> 7) & 0x7f, 
 	0x0e, 0xe3, offset4.value & 0x7f, (offset4.value >> 7) & 0x7f, 
-	// 0x0e, 0xe0, msb16(offset1.value), lsb16(offset1.value),
-	// 0x0e, 0xe1, msb16(offset2.value), lsb16(offset2.value),
-	// 0x0e, 0xe2, msb16(offset3.value), lsb16(offset3.value),
-	// 0x0e, 0xe3, msb16(offset4.value), lsb16(offset4.value),
     ];
     var promise = new Promise((resolve, reject) => {
 	var data = new Uint8Array(cfg);
