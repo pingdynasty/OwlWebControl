@@ -32,38 +32,60 @@ function controlChange(status, cc, value){
     cc = parseInt(cc);
     switch(cc){
     case OpenWareMidiControl.PATCH_PARAMETER_A:
-	s1.set({value: value/100}, false);
+	s1.set({value: value/128}, false);
 	break;
     case OpenWareMidiControl.PATCH_PARAMETER_B:
-	s2.set({value: value/100}, false);
+	s2.set({value: value/128}, false);
 	break;
     case OpenWareMidiControl.PATCH_PARAMETER_C:
-	s3.set({value: value/100}, false);
+	s3.set({value: value/128}, false);
 	break;
     case OpenWareMidiControl.PATCH_PARAMETER_D:
-	s4.set({value: value/100}, false);
+	s4.set({value: value/128}, false);
 	break;
     // case OpenWareMidiControl.PATCH_PARAMETER_E:
     // 	$("#p5").val(value);
-    // 	s5.set({value: value/100}, false);
+    // 	s5.set({value: value/128}, false);
     // 	break;
     // case OpenWareMidiControl.PATCH_PARAMETER_F:
     // 	$("#p6").val(value);
-    // 	s5.set({value: value/100}, false);
+    // 	s5.set({value: value/128}, false);
     // 	break;
     // case OpenWareMidiControl.PATCH_PARAMETER_G:
     // 	$("#p7").val(value);
-    // 	s5.set({value: value/100}, false);
+    // 	s5.set({value: value/128}, false);
     // 	break;
     // case OpenWareMidiControl.PATCH_PARAMETER_H:
     // 	$("#p8").val(value);
-    // 	s5.set({value: value/100}, false);
+    // 	s5.set({value: value/128}, false);
 	// 	break;
-    // case 1:
-    // 	cc1.set({value: value/100}, false);
-    // 	break;
-    default:
-	log("received CC "+ch+":"+cc+":"+value);
+    case 1:
+	switch(ch){
+	case 1:	    
+            cc1.set({value: value/128}, false);
+	    break;
+	case 2:	    
+            cc2.set({value: value/128}, false);
+	    break;
+	case 3:	    
+            cc3.set({value: value/128}, false);
+	    break;
+	case 4:	    
+            cc4.set({value: value/128}, false);
+	    break;
+	case 5:	    
+            cc5.set({value: value/128}, false);
+	    break;
+	case 6:	    
+            cc6.set({value: value/128}, false);
+	    break;
+	case 7:	    
+            cc7.set({value: value/128}, false);
+	    break;
+	}
+	break;
+    // default:
+    // 	log("received CC "+ch+":"+cc+":"+value);
     }
 }
 
@@ -85,6 +107,7 @@ $(document).ready(function() {
 
     if(typeof nx !== 'undefined') {
 	nx.onload = function(){
+        vol.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(7, data.value*127);});
 	s1.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_A, data.value*127);});
 	s2.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_B, data.value*127);});
 	s3.sendsTo(function(data){HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_PARAMETER_C, data.value*127);});

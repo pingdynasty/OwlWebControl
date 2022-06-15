@@ -39,13 +39,16 @@ function systemExclusive(data) {
 	case OpenWareMidiSysexCommand.SYSEX_PRESET_NAME_COMMAND:
             var name = getStringFromSysex(data, 5, 1);
 	    var idx = data[4];
-	    registerPatch(idx, name);
-	    // log("preset "+idx+": "+name);
+	    var size = data.length > 5+6+name.length ? decodeInt(data.slice(6+name.length)) : 0;
+	    var crc = data.length > 5+5+6+name.length ? decodeInt(data.slice(5+6+name.length)) : 0;
+	    log("Preset "+idx+": "+name+" ["+size+"][0x"+crc.toString(16)+"]");
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_RESOURCE_NAME_COMMAND:
             var name = getStringFromSysex(data, 5, 1);
 	    var idx = data[4];
-	    log("resource "+idx+": "+name);
+	    var size = data.length > 5+6+name.length ? decodeInt(data.slice(6+name.length)) : 0;
+	    var crc = data.length > 5+5+6+name.length ? decodeInt(data.slice(5+6+name.length)) : 0;
+	    log("Resource "+idx+": "+name+" ["+size+"][0x"+crc.toString(16)+"]");
 	    break;
 	case OpenWareMidiSysexCommand.SYSEX_PARAMETER_NAME_COMMAND:
             var name = getStringFromSysex(data, 5, 1);
