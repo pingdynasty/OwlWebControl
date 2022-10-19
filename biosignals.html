@@ -175,6 +175,20 @@
     <!--   Connect: <input id="connect" type="button"/> -->
     <!-- </p> -->
 
+    <div>
+    <h3>Settings</h3>
+    <p>Set Configuration:
+      <form>
+    	<input name="key" type="text"/>
+    	<input name="value" type="text"/>
+    	<button type="button" onclick="HoxtonOwl.midiClient.sendSysexString(OpenWareMidiSysexCommand.SYSEX_CONFIGURATION_COMMAND, this.form[0].value+parseInt(this.form[1].value).toString(16))">Send</button>
+      </form>
+    </p>
+    <!-- <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_STORE); return false;">Store</button> -->
+    <!-- <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_SETTINGS_RESET); return false;">Reset</button> -->
+    <!-- <button onclick="HoxtonOwl.midiClient.sendSysexCommand(OpenWareMidiSysexCommand.SYSEX_FLASH_ERASE);"> Erase</button> -->
+  </div>
+
     <h3>Query</h3>
     status <input type="button" onclick="sendStatusRequest(); return false;"/>
     load <input type="button" onclick="sendLoadRequest(); return false;"/>
