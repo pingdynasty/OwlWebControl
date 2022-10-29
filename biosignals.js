@@ -1,7 +1,7 @@
 
 function pitchBend(channel, value) {
     // $("#pb").val(value);
-    // pb.set({value: (value-8192)/8192}, false);
+    // console.log("received PB "+channel+":"+value);
     switch(channel){
     case 1:
 	pb1.set({value: value/16384}, false);
@@ -29,6 +29,7 @@ function pitchBend(channel, value) {
 
 function controlChange(status, cc, value){
     var ch = parseInt(status)&0x0f;
+    // console.log("received CC "+ch+":"+cc+":"+value);
     cc = parseInt(cc);
     switch(cc){
     case OpenWareMidiControl.PATCH_PARAMETER_A:

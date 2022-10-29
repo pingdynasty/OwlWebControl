@@ -125,7 +125,7 @@
     <p id="patchmessage"></p>
     <p id="deviceid"></p>
     <p>Poll 
-      <input id="poll" type="checkbox" onclick="setMonitor(this.checked); return true;"/>
+      <input id="poll" type="checkbox" onclick="setMonitor(this.checked); return true;" checked />
     </p>
     <p>Remote
       <input type="checkbox" onclick="HoxtonOwl.midiClient.sendCc(OpenWareMidiControl.PATCH_CONTROL, this.checked?127 : 0); return true;"/>
